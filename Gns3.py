@@ -37,24 +37,29 @@ lab.stats
 #while type(nb_as) != int or nb_as < 0 :
 #   nb_as = int(input("Erreur mettez un entier, combien d'AS désirez-vous?"))
 
-nb_routeur = 0
-snb_routeur = "1"
+nb_interconnexion = 0
+snb_interconnexion = "1"
 
 # List the names and status of all the nodes in the project
 for node in lab.nodes:
-    int = 1
-    print(f"Node: {node.name} -- Node Type: {node.node_type} -- Status: {node.status}\n")
     entete = "2001:100:1:"
     fin = "::"
     node.get()#récupère les informations du noeud
+    node.start()
+    print(f"Node: {node.name} -- Node Type: {node.node_type} -- Status: {node.status}\n")
 
     tn = telnetlib.Telnet(node.console_host,str(node.console))
 
+    tn.write(bytes("\r",encoding= 'ascii'))
     tn.write(bytes("configure terminal\r",encoding= 'ascii'))
     tn.write(bytes("ipv6 unicast-routing\r",encoding= 'ascii'))
     for i in range(len(node.links)):
-        adresse = entete + snb_routeur + fin 
+        adresse = entete + snb_interconnexion + fin 
         link = node.links[i]
+        if i > 0 : #cette condition permet de mettre les bonne adresse ipv6 à chaque interconnexion
+            nb_interconnexion += 1
+            snb_interconnexion = str(nb_interconnexion)
+            gi = 1
         print(link.nodes[i])
         print(len(link.nodes[i]))
         for k in range (len(link.nodes[i])-2):#-2 car link.nodes[i] contient le lien dans les deux sens 
@@ -66,7 +71,7 @@ for node in lab.nodes:
                 tn.write(bytes("ipv6 address " + adresse + str(int) +"/64\r",encoding= 'ascii'))
                 tn.write(bytes("no shutdown\r",encoding= 'ascii'))
                 tn.write(bytes("exit\r",encoding= 'ascii'))
-                int += 1
-                nb_routeur += 1
-    snb_routeur = str(nb_routeur)
+        gi += 1
     tn.write(bytes("end\r",encoding= 'ascii'))
+    res = tn.read_very_eager().decode('utf-8')
+    print(res)
