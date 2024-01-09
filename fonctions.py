@@ -35,7 +35,7 @@ def RIP_int(RX, int) :
     tn.write(bytes("exit\r",encoding= 'ascii'))
     
 def ID_OSPF(RX,id) :
-     """
+    """
     Config le routeur id pour OSPF
     """
     tn.write(bytes("ipv6 router ospf 1\r",encoding= 'ascii'))
