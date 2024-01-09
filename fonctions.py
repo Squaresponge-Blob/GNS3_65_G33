@@ -64,6 +64,7 @@ def ID_BGP(RX, id, AS) :
     """
     tn.write(bytes("router bgp"+ AS +"\r",encoding= 'ascii'))
     tn.write(bytes("no bgp default ipv4-unicast\r",encoding= 'ascii'))
+    tn.write(bytes("bgp router-id"+ id +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
 def iBGP(RX, loopback, ad_n) :
