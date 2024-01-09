@@ -39,7 +39,7 @@ def ID_OSPF(RX,id) :
     Config le routeur id pour OSPF
     """
     tn.write(bytes("ipv6 router ospf 1\r",encoding= 'ascii'))
-    tn.write(bytes("router-id"+ id +"\r",encoding= 'ascii'))
+    tn.write(bytes("router-id "+ id +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
     
 def OSPF(RX,int) :
@@ -55,22 +55,47 @@ def OSPF_passif(RX,int) :
     Met l'interface int du routeur RX configurée avec OSPF en passif
     """
     tn.write(bytes("ipv6 router ospf 1\r",encoding= 'ascii'))
-    tn.write(bytes("passive-interface"+ int +"\r",encoding= 'ascii'))
+    tn.write(bytes("passive-interface "+ int +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
 def ID_BGP(RX, id, AS) :
     """
     Config le routeur id pour BGP
     """
-    tn.write(bytes("router bgp"+ AS +"\r",encoding= 'ascii'))
+    tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
     tn.write(bytes("no bgp default ipv4-unicast\r",encoding= 'ascii'))
-    tn.write(bytes("bgp router-id"+ id +"\r",encoding= 'ascii'))
+    tn.write(bytes("bgp router-id "+ id +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
-def iBGP(RX, loopback, ad_n) :
+def iBGP(RX, ad_n, AS) :
     """
     Configure iBGP sur l'interface loopback du routeur RX
     """
-    
+    tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
+    tn.write(bytes("neighbor "+ ad_n +" remote-as"+ AS +"\r",encoding= 'ascii'))
+    tn.write(bytes("neighbor "+ ad_n +" update-source l0\r",encoding= 'ascii'))
+    tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
+    tn.write(bytes("neighbor "+ ad_n +" activate\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii'))    
 
-def eBGP(RX, int, ad_n, AS_n) :
+def eBGP(RX, ad_n, AS_n, AS) :
+    """
+    Configure eBGP sur l'interface loopback du routeur RX
+    """
+    tn.write(bytes("router bgp"+ AS +"\r",encoding= 'ascii'))
+    tn.write(bytes("neighbor "+ ad_n +" remote-as"+ AS_n +"\r",encoding= 'ascii'))
+    tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
+    tn.write(bytes("neighbor "+ ad_n +" activate\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii')) 
+
+def eBGP_adv(RX, AS, prefix) :
+    """
+    Configure advertissement pour le routeur RX en eBGP
+    """ 
+    tn.write(bytes("router bgp"+ AS +"\r",encoding= 'ascii'))
+    tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
+    tn.write(bytes("network "+ prefix +"\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii')) 
