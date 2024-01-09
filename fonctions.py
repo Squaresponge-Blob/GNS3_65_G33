@@ -30,8 +30,32 @@ def RIP_int(RX, int) :
     """
     Configure RIP sur l'interface int du routeur RX
     """
-    tn.write(bytes("int "+int+"\r",encoding= 'ascii'))
+    tn.write(bytes("int "+ int +"\r",encoding= 'ascii'))
     tn.write(bytes("ipv6 rip ripng enable\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii'))
+    
+def ID_OSPF(RX,id) :
+     """
+    Config le routeur id pour OSPF
+    """
+    tn.write(bytes("ipv6 router ospf 1\r",encoding= 'ascii'))
+    tn.write(bytes("router-id"+ id +"\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii'))
+    
+def OSPF(RX,int) :
+    """
+    Configure OSPF sur l'interface int du routeur RX
+    """
+    tn.write(bytes("int "+ int +"\r",encoding= 'ascii'))
+    tn.write(bytes("ipv6 ospf 1 area 0\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii'))
+
+def OSPF_passif(RX,int) :
+    """
+    Met l'interface int du routeur RX configurée avec OSPF en passif
+    """
+    tn.write(bytes("ipv6 router ospf 1\r",encoding= 'ascii'))
+    tn.write(bytes("passive-interface"+ int +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
 def ID_BGP(RX, id) :
@@ -40,7 +64,3 @@ def ID_BGP(RX, id) :
     """
 
 
-def ID_OSPF(RX,id) :
-     """
-    Config le routeur id pour OSPF
-    """
