@@ -29,7 +29,7 @@
             "ID":"3.3.3.3",
             "AS":"X",
             "Protocole":"RIP",
-            "Loopback":"1000::3/126",
+            "Loopback":"1000::3/128",
             "Voisins":[
                 {"Nom":"R1","AS":"X","Int":"g1/0","Adresse":"2001:100:1:2::2/64"},
                 {"Nom":"R2","AS":"X","Int":"g2/0","Adresse":"2001:100:1:3::2/64"},
