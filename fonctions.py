@@ -2,6 +2,12 @@ def Config_adresse(RX, adresse, int) :
     """
     Configuration de l'adresse (str) du routeur RX (str) sur l'interface int (str)
     """
+    tn.write(bytes("int "+int+"\r",encoding= 'ascii'))
+    tn.write(bytes("ipv6 enable\r",encoding= 'ascii'))
+    tn.write(bytes("ipv6 address " + adresse + "\r",encoding= 'ascii'))
+    tn.write(bytes("no shutdown\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii'))
+
 def Config_loopback(RX,loopback) : 
     """
     Configuration de l'adresse loopback (str) du routeur RX (str)
