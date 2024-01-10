@@ -77,6 +77,7 @@ print(adresses_routeur)
 for node in lab.nodes:        
     node.get()#récupère les informations du noeud
     node.start()
+    print(node.node_directory) #Important le fichier config a pour chemin node.node_directory + configs
     print(f"Node: {node.name} -- Node Type: {node.node_type} -- Status: {node.status}\n")
     
     tn = telnetlib.Telnet(node.console_host,str(node.console))
@@ -104,7 +105,7 @@ for node in lab.nodes:
                         tn.write(bytes("no shutdown\r",encoding= 'ascii'))
                         tn.write(bytes("exit\r",encoding= 'ascii'))
 
-    #tn.write(bytes("end\r",encoding= 'ascii'))
+    tn.write(bytes("end\r",encoding= 'ascii'))
     #res = tn.read_very_eager().decode('utf-8')
     #print(res)
 
