@@ -3,7 +3,7 @@ vérifie la position du routeur et lance les configurations nécessaires
 """
 
 from lecture_json import Routeur, liste_routeurs
-from fonctions import *
+from fonctions_tn import *
 
 
 for r in liste_routeurs :
