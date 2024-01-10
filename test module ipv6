@@ -61,7 +61,7 @@ adresses_routeur = {}
 num_r = 1
 list = []
 
-for node in lab.nodes:
+for node in lab.nodes: #récupère les id de chaque lien 
     node.get()
     for i in range(len(node.links)):
         link = node.links[i]
@@ -69,12 +69,11 @@ for node in lab.nodes:
             list.append(link.link_id)
             print(list)
 
-for lien in list:
+for lien in list: #crée un dictionnaire associant les id des liens et leurs masques d'adresse ip respectives 
     adresses_routeur[lien] = "2001:100:1:"+str(num_r)+"::"
     num_r += 1    
 print(adresses_routeur)
-
-used_ipv6 = {}     
+    
 for node in lab.nodes:        
     node.get()#récupère les informations du noeud
     node.start()
