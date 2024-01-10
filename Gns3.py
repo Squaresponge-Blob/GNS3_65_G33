@@ -4,6 +4,7 @@ from tabulate import tabulate
 import telnetlib
 import time 
 import json
+import ipaddress
 
 
 # Define the server object to establish the connection
