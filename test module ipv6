@@ -104,11 +104,7 @@ for node in lab.nodes:
                         time.sleep(1)
                         tn.write(bytes("no shutdown\r",encoding= 'ascii'))
                         tn.write(bytes("exit\r",encoding= 'ascii'))
-                    
-                    
-                    #lien_parcouru.append(link.link_id)
-                    #print(lien_parcouru)
-       
+
     #tn.write(bytes("end\r",encoding= 'ascii'))
     #res = tn.read_very_eager().decode('utf-8')
     #print(res)
