@@ -11,7 +11,7 @@ conf = f"""
     """
 
 conf = f"""
-    ipv6 router rip 1
+    ipv6 router rip ripng
      redistribute connected
     """
 # config interface OSPF
