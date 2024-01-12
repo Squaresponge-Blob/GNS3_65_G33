@@ -48,11 +48,11 @@ for r in liste_routeurs :
     
     #BGP
     
-    config = Config_BGP(config) # bloc commun pour tous les routeurs (en eBGP et iBGP)
+    config = Config_BGP(config, r.AS, r.id) # bloc commun pour tous les routeurs (en eBGP et iBGP)
     for v in r.voisins :
 
         adresse_v = find_ad(r.nom, v["Nom"])   
-        config = Config_BGP(config,adresse_v,v["AS"]) # ligne neighbor [adresse_v] remote-as [AS]
+        config = Config_BGP_neighbor(config,adresse_v,v["AS"]) # ligne neighbor [adresse_v] remote-as [AS]
         
         #iBGP
         if v["AS"] == r.AS :
@@ -64,7 +64,7 @@ for r in liste_routeurs :
 
     # configurer les protocoles (lignes à la fin)
     if r.protocole == "RIP" :
-        config = Config_RIP(config,r.id)
+        config = Config_RIP(config)
     if r.protocole == "OSPF" :
         config = Config_OSPF(config,r.id)
 
