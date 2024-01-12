@@ -56,7 +56,8 @@ for r in liste_routeurs :
         if v["AS"] == r.AS :
             Config_iBGP(adresse_v) # ligne neighbor [adresse_v] update-source Loopback0
     
-        Config_BGP2(adresse_v) # la partie qui activate
+        Config_BGP2
+        Config_BGP_activate(adresse_v) # la partie qui activate
 
 
     # configurer les protocoles (lignes à la fin)
