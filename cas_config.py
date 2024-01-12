@@ -21,54 +21,58 @@ def find_ad(a, b, liste_routeurs) :
 
 for r in liste_routeurs :
 
-    Config_debut(r.nom) #fonction qui écrit le début, tjrs pareil sauf pour le hostname r.nom
+    config = ""
+
+    Config_debut(config,r.nom) #fonction qui écrit le début, tjrs pareil sauf pour le hostname r.nom
 
     #Configurer les interfaces (en fonction du protocole)
     for v in r.voisins :
-        Config_interface(r.nom,v["Int",v["Adresse"]]) #activer ipv6, donner une adresse
+        Config_interface(config,v["Int",v["Adresse"]]) #activer ipv6, donner une adresse
         if r.AS == "1" :
-            Int_RIP(r.nom) # ajoute la ligne pour activer RIP
+            Int_RIP(config) # ajoute la ligne pour activer RIP
         if r.AS =="2":
-            Int_OSPF(r.nom)
+            Int_OSPF(config)
         
-        Config_interface(r.nom,"Loopback0", r.loopback)
+        Config_interface(config,"Loopback0", r.loopback)
         if r.AS == "1" :
-            Int_RIP(r.nom) # ajoute la ligne pour activer RIP
+            Int_RIP(config) # ajoute la ligne pour activer RIP
         if r.AS =="2":
-            Int_OSPF(r.nom)
+            Int_OSPF(config)
 
     #OSPF interface passif
     #interface passif
     for v in r.voisins : 
         if v["AS"] != r.AS and r.AS == "2":
-            Config_int_passif(r.nom,v["Int"])
+            Config_int_passif(config,v["Int"])
 
     
     #BGP
     
-    Config_BGP(r.nom) # bloc commun pour tous les routeurs (en eBGP et iBGP)
+    Config_BGP(config) # bloc commun pour tous les routeurs (en eBGP et iBGP)
     for v in r.voisins :
 
         adresse_v = find_ad(r.nom, v["Nom"])   
-        Config_BGP(r.nom,adresse_v,v["AS"]) # ligne neighbor [adresse_v] remote-as [AS]
+        Config_BGP(config,adresse_v,v["AS"]) # ligne neighbor [adresse_v] remote-as [AS]
         
         #iBGP
         if v["AS"] == r.AS :
-            Config_iBGP(r.nom,adresse_v) # ligne neighbor [adresse_v] update-source Loopback0
+            Config_iBGP(config,adresse_v) # ligne neighbor [adresse_v] update-source Loopback0
     
-        Config_BGP2(r.nom) #address-family ipv6
-        Config_BGP_activate(r.nom,adresse_v) # la partie qui activate
+        Config_BGP2(config) #address-family ipv6
+        Config_BGP_activate(config,adresse_v) # la partie qui activate
 
 
     # configurer les protocoles (lignes à la fin)
     if r.protocole == "RIP" :
-        Config_RIP(r.nom,r.id)
+        Config_RIP(config,r.id)
     if r.protocole == "OSPF" :
-        Config_OSPF(r.nom,r.id)
+        Config_OSPF(config,r.id)
 
 
 
-    Config_fin(r.nom) #trucs à la fin
+    Config_fin(config) #trucs à la fin
+
+    Ecrire_dans_fichier(config,r.nom) 
 
 
     
