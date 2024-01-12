@@ -71,6 +71,7 @@ for r in liste_routeurs :
 
 
     config = Config_fin(config) #trucs à la fin
+    print(config)
 
     Ecrire_dans_fichier(config,r.nom) 
 
