@@ -33,7 +33,7 @@ for r in liste_routeurs :
         if r.AS =="2":
             config = Int_OSPF(config)
         
-        config = Config_interface(config,"Loopback0", r.loopback)
+        config = Config_Loop(config,"Loopback0", r.loopback)
         if r.AS == "1" :
             config = Int_RIP(config) # ajoute la ligne pour activer RIP
         if r.AS =="2":
