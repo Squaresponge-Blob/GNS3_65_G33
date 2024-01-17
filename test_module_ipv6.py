@@ -9,8 +9,9 @@ from ipaddress import IPv6Address, ip_network
 # Define the server object to establish the connection
 gns3_server = gns3fy.Gns3Connector(url ="http://localhost:3080")
 
-# Define the lab you want to load and assign the server connector
+# Define the lab you want to load and assign the 
 lab = gns3fy.Project(name="Projet", connector=gns3_server)
+
 
 print(
         tabulate(
@@ -49,7 +50,6 @@ asy_asx = ip_network(asx_asy)
         break
     time.sleep(1)
 """
-
 adresses_routeur = {}
 num_r = 1
 list = []
@@ -67,13 +67,16 @@ for lien in list: #crée un dictionnaire associant les id des liens et leurs mas
     num_r += 1    
 print(adresses_routeur)
 
+
 int_utilisées = {}
+=======
 for node in lab.nodes:        
     node.get()#récupère les informations du noeud
     node.start()
     print(node.node_directory) #Important le fichier config a pour chemin node.node_directory + configs
     print(f"Node: {node.name} -- Node Type: {node.node_type} -- Status: {node.status}\n")
     int_utilisées[node.node_id] = []
+  
     tn = telnetlib.Telnet(node.console_host,str(node.console))
     tn.write(bytes("\r",encoding= 'ascii'))
     tn.write(bytes("\r",encoding= 'ascii'))
@@ -91,6 +94,7 @@ for node in lab.nodes:
                         interface = link.nodes[k]["label"]["text"]
                         print(interface)
                         print(sub[k]+1)
+
                         if interface not in int_utilisées[node.node_id]:
                             int_utilisées[node.node_id].append(interface)
                             tn.write(bytes("int "+ interface+"\r",encoding= 'ascii'))
@@ -99,6 +103,7 @@ for node in lab.nodes:
                             time.sleep(1)
                             tn.write(bytes("no shutdown\r",encoding= 'ascii'))
                             tn.write(bytes("exit\r",encoding= 'ascii'))
+
 
     tn.write(bytes("end\r",encoding= 'ascii'))
     #res = tn.read_very_eager().decode('utf-8')
