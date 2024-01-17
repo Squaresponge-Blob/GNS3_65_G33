@@ -5,24 +5,6 @@ vérifie la position du routeur et lance les configurations nécessaires
 from lecture_json import Routeur, liste_routeurs
 from Modif_config import *
 
-def find_ad(a, b, liste_routeurs) : 
-    """
-    trouve l'adresse du routeur a sur l'interface où il est connecté à b
-    """
-    for r in liste_routeurs :
-        if r.nom == b :
-            for v in r.voisins :
-                if v["Nom"] == a :
-                    return v["Adresse"]
-
-
-def routeurBord(r) :
-    for v in r.voisins : 
-        if v["AS"] != r.AS :
-            return True
-    return False
-
-
 for r in liste_routeurs :
 
     config = ""
@@ -37,11 +19,11 @@ for r in liste_routeurs :
         if r.protocole =="OSPF":
             config = Int_OSPF(config)
         
-        config = Config_Loop(config,"Loopback0", r.loopback)
-        if r.protocole == "RIP" :
-            config = Int_RIP(config) # ajoute la ligne pour activer RIP
-        if r.protocole =="OSPF":
-            config = Int_OSPF(config)
+    config = Config_Loop(config,"Loopback0", r.loopback)
+    if r.protocole == "RIP" :
+        config = Int_RIP(config) # ajoute la ligne pour activer RIP
+    if r.protocole =="OSPF":
+        config = Int_OSPF(config)
 
     #OSPF interface passif
     #interface passif
@@ -54,7 +36,7 @@ for r in liste_routeurs :
     config = Config_BGP(config, r.AS, r.id) # bloc commun pour tous les routeurs (en eBGP et iBGP)
     for v in r.voisins :
 
-        adresse_v = find_ad(r.nom, v["Nom"])   
+        adresse_v = find_ad(r.nom, v["Nom"],liste_routeurs)   
         config = Config_BGP_neighbor(config,adresse_v,v["AS"]) # ligne neighbor [adresse_v] remote-as [AS]
         
         #iBGP
@@ -68,6 +50,7 @@ for r in liste_routeurs :
     #     config = Config_BGP_adv(config,NETWORK)
 
     for v in r.voisins :
+        adresse_v = find_ad(r.nom, v["Nom"],liste_routeurs) 
         config = Config_BGP_activate(config,adresse_v) # la partie qui activate
     
     config = Config_BGP_exit(config)
@@ -83,7 +66,7 @@ for r in liste_routeurs :
     config = Config_fin(config) #trucs à la fin
     print(config)
 
-    Ecrire_dans_fichier(config,r.nom) 
+    #Ecrire_dans_fichier(config,r.nom) 
 
 
     

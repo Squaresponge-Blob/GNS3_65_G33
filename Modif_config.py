@@ -50,86 +50,26 @@ def Great_Explosion_Murder_God_Dynamight():
         num_r += 1    
     print(adresses_routeur)
     return adresses_routeur
-     
+                                          
 
-def fichier_cfg():
-    adresses_routeur = Great_Explosion_Murder_God_Dynamight()
-    routeur = 1 
-    for node in lab.nodes: 
-        node.get()
-        chemin = node.node_directory + "/configs/i"+str(routeur)+"_startup-config.cfg"
-        print(chemin)
-        routeur += 1
-        f = open(chemin,"wt")
-        for i in range(len(node.links)):
-            link = node.links[i]
-            sub = adresses_routeur[link.link_id] + "/64"
-            sub = ip_network(sub)
-            for k in range (2):#car link.nodes[i] contient le lien dans les deux sens
-                        if link.nodes[k]["node_id"] == node.node_id: 
-                            interface = link.nodes[k]["label"]["text"]
-                            conf = f"""!
-!
-service timestamps debug datetime msec
-service timestamps log datetime msec
-no service password-encryption
-!
-hostname {node.name}
-!
-boot-start-marker
-boot-end-marker
-!
-!
-!
-no aaa new-model
-no ip icmp rate-limit unreachable
-ip cef
-!
-!
-!
-!
-!
-!
-no ip domain lookup
-ipv6 unicast-routing
-ipv6 cef
-!
-!
-multilink bundle-name authenticated
-!
-!
-!
-!
-!
-!
-!
-!
-ip tcp synwait-time 5
-!
-interface {interface}
- no ip address
- negotiation auto
- ipv6 address {str(sub[k] + 1)}/64
- ipv6 enable
- ipv6 rip 1 enable
-!                         
-no cdp log mismatch duplex
-!
-line con 0
- exec-timeout 0 0
- logging synchronous
- privilege level 15
- no login
-line aux 0
- exec-timeout 0 0
- logging synchronous
- privilege level 15
- no login
-!
-!
-end
-"""
-                            f.write(conf)                                        
+def find_ad(a, b, liste_routeurs) : 
+    """
+    trouve l'adresse du routeur a sur l'interface où il est connecté à b
+    """
+    for r in liste_routeurs :
+        if r.nom == b :
+            for v in r.voisins :
+                if v["Nom"] == a :
+                    return v["Adresse"]
+
+
+def routeurBord(r) :
+    for v in r.voisins : 
+        if v["AS"] != r.AS :
+            return True
+    return False
+
+
 
 
 def Config_debut(config, nom) :
@@ -194,11 +134,11 @@ def Config_interface(config,Int,adresse):
     return config
 
 def Int_RIP(config):
-    config += " ipv6 rip ripng enable\n!"
+    config += " ipv6 rip ripng enable\n!\n"
     return config
 
 def Int_OSPF(config):
-    config += " ipv6 ospf 1 area 0\n !"
+    config += " ipv6 ospf 1 area 0\n !\n"
     return config 
 
 def Config_Loop(config,Int,adresse):
