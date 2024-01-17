@@ -14,7 +14,7 @@ def Config_loopback(RX,loopback) :
     """
     tn.write(bytes("int l0\r",encoding= 'ascii'))
     tn.write(bytes("ipv6 enable\r",encoding= 'ascii'))
-    tn.write(bytes("ipv6 address " + adresse + "\r",encoding= 'ascii'))
+    tn.write(bytes("ipv6 address " + loopback + "\r",encoding= 'ascii'))
     tn.write(bytes("no shutdown\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
