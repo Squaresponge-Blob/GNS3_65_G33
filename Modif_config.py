@@ -132,6 +132,67 @@ end
                             f.write(conf)                                        
 
 
+def Config_debut(config, nom) :
+    config += f"""!
+!
+
+!
+version 15.2
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname {nom}
+!
+boot-start-marker
+boot-end-marker
+!
+!
+!
+no aaa new-model
+no ip icmp rate-limit unreachable
+ip cef
+!
+!
+!
+!
+!
+!
+no ip domain lookup
+ipv6 unicast-routing
+ipv6 cef
+!
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+ip tcp synwait-time 5
+! 
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+"""
+    return config
+
+def Config_interface(config,Int,adresse):
+    config += f"interface {Int}\n no ip address\n negotiation auto\n ipv6 address {adresse}\n ipv6 enable\n"
+    return config
+
 def Int_RIP(config):
     config += " ipv6 rip ripng enable\n!"
     return config
@@ -139,40 +200,44 @@ def Int_RIP(config):
 def Int_OSPF(config):
     config += " ipv6 ospf 1 area 0\n !"
     return config 
-     
-def Config_BGP(config, AS, id):
-    config += f"router bgp {AS}\n bgp router-id {id}\n bgp log-neighbor-changes\n no bgp default ipv4-unicast\n"
-    return config
 
-def Config_iBGP(config,adresse):
-    config += f"neighbor {adresse} update-source Loopback0\n"
-    return config
-     
-def Config_BGP_neighbor(config,adresse,AS):
-    config += f" neighbor {adresse} remote-as {AS}\n"
+def Config_Loop(config,Int,adresse):
+    config += f"interface {Int}\n no ip address\n ipv6 address {adresse}\n ipv6 enable\n"
     return config
      
 def Config_int_passif(config,Int):
     config += f"router ospf 1\n passive-interface {Int}\n!"
     return config 
 
-def Config_interface(config,Int,adresse):
-    config += f"{Int}\n no ip address\n negotiation auto\n ipv6 address {adresse}\n ipv6 enable\n"
+def Config_BGP(config, AS, id):
+    config += f"router bgp {AS}\n bgp router-id {id}\n bgp log-neighbor-changes\n no bgp default ipv4-unicast\n"
+    return config
+     
+def Config_BGP_neighbor(config,adresse,AS):
+    config += f" neighbor {adresse} remote-as {AS}\n"
     return config
 
-def Config_Loop(config,Int,adresse):
-    config += f"{Int}\n no ip address\n ipv6 address {adresse}\n ipv6 enable\n"
+def Config_iBGP(config,adresse):
+    config += f" neighbor {adresse} update-source Loopback0\n"
     return config
 
 def Config_BGP2(config):
-    config += f" address-family ipv6\n"
+    config += f" !\n address-family ipv6\n"
+    return config
+
+def Config_BGP_adv(config, network) :
+    config += f"  network {network}"
     return config
 
 def Config_BGP_activate(config, adresse):
     config += f"  neighbor {adresse} activate\n"
     return config
 
-def Config_RIP(config,id): 
+def Config_BGP_exit(config):
+    config += f" exit-address-family\n!\nip forward-protocol nd\n!\n!\nno ip http server\n no ip http secure-server\n!\n"
+    return config
+
+def Config_RIP(config): 
     config += "ipv6 router rip ripng\n redistribute connected\n"
     return config
 
@@ -181,7 +246,7 @@ def Config_OSPF(config,id):
     return config
 
 def Config_fin(config):
-    config += f"control-plane\n!\n!\nline con 0\n exec-timeout 0 0\n privilege level 15\n logging synchronous\n stopbits 1\nline aux 0\n exec-timeout 0 0\n privilege level 15\n logging synchronous\n stopbits 1\nline vty 0 4\n login\n!\n!\nend"
+    config += f"!\n!\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout 0 0\n privilege level 15\n logging synchronous\n stopbits 1\nline aux 0\n exec-timeout 0 0\n privilege level 15\n logging synchronous\n stopbits 1\nline vty 0 4\n login\n!\n!\nend"
     return config
 
 def Ecrire_dans_fichier(config, nom):

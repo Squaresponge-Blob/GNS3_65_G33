@@ -16,7 +16,11 @@ def find_ad(a, b, liste_routeurs) :
                     return v["Adresse"]
 
 
-
+def routeurBord(r) :
+    for v in r.voisins : 
+        if v["AS"] != r.AS :
+            return True
+    return False
 
 
 for r in liste_routeurs :
@@ -27,23 +31,22 @@ for r in liste_routeurs :
 
     #Configurer les interfaces (en fonction du protocole)
     for v in r.voisins :
-        config = Config_interface(config,v["Int",v["Adresse"]]) #activer ipv6, donner une adresse
-        if r.AS == "1" :
+        config = Config_interface(config,v["Int"],v["Adresse"]) #activer ipv6, donner une adresse
+        if r.protocole == "RIP" :
             config = Int_RIP(config) # ajoute la ligne pour activer RIP
-        if r.AS =="2":
+        if r.protocole =="OSPF":
             config = Int_OSPF(config)
         
         config = Config_Loop(config,"Loopback0", r.loopback)
-        if r.AS == "1" :
+        if r.protocole == "RIP" :
             config = Int_RIP(config) # ajoute la ligne pour activer RIP
-        if r.AS =="2":
+        if r.protocole =="OSPF":
             config = Int_OSPF(config)
 
     #OSPF interface passif
     #interface passif
-    for v in r.voisins : 
-        if v["AS"] != r.AS and r.AS == "2":
-            config = Config_int_passif(config,v["Int"])
+    if routeurBord(r) and r.protocole == "OSPF" : 
+        config = Config_int_passif(config,v["Int"])
 
     
     #BGP
@@ -58,9 +61,16 @@ for r in liste_routeurs :
         if v["AS"] == r.AS :
             config = Config_iBGP(config,adresse_v) # ligne neighbor [adresse_v] update-source Loopback0
     
-        config = Config_BGP2(config) #address-family ipv6
-        config = Config_BGP_activate(config,adresse_v) # la partie qui activate
+    config = Config_BGP2(config) #address-family ipv6
 
+    #Network advertisement pour routeurs de bords A COMPLETER !!!!!
+    # if routeurBord(r) : 
+    #     config = Config_BGP_adv(config,NETWORK)
+
+    for v in r.voisins :
+        config = Config_BGP_activate(config,adresse_v) # la partie qui activate
+    
+    config = Config_BGP_exit(config)
 
     # configurer les protocoles (lignes à la fin)
     if r.protocole == "RIP" :
