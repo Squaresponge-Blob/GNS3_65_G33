@@ -146,7 +146,7 @@ def Config_Loop(config,Int,adresse):
     return config
      
 def Config_int_passif(config,Int):
-    config += f"router ospf 1\n passive-interface {Int}\n!"
+    config += f"router ospf 1\n passive-interface {Int}\n!\n"
     return config 
 
 def Config_BGP(config, AS, id):
