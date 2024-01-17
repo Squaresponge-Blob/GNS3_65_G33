@@ -69,7 +69,7 @@ print(adresses_routeur)
 
 
 int_utilisées = {}
-=======
+
 for node in lab.nodes:        
     node.get()#récupère les informations du noeud
     node.start()
