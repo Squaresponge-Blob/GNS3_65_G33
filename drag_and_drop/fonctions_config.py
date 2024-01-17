@@ -31,7 +31,6 @@ lab.status
 # Verify the stats
 lab.stats
 
-d     
 
 def find_ad(a, b, liste_routeurs) : 
     """
