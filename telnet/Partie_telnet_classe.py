@@ -1,6 +1,7 @@
 from gns3fy import Gns3Connector, Project,Node
 #from Modif_config import routeurBord
 from tabulate import tabulate
+from fonctions_tn import *
 import telnetlib
 import time 
 import json
@@ -44,30 +45,46 @@ for r in routeurs :
 lab.stats
 
 class GNS3_telnet:
-    def __init__(self, nom, id, AS, protocole, loopback, voisins, masque):
+    def __init__(self, nom, id, AS, protocole, loopback, voisins) :
         self.nom = nom
         self.id = id
         self.AS = AS
         self.protocole = protocole
         self.loopback = loopback
         self.voisins = voisins
-        self.masque = masque 
     
-    def IPv6(self, nom, AS): 
-        self.adresses_routeur = {}
-        num_r = 1
-        self.AS_1 = []
-        self.AS_2 = []
-        self.bord = []
+    def IPv6(self, liste): 
         for node in lab.nodes: #récupère les id de chaque lien 
             node.get()
-            for i in range(len(node.links)):
-                link = node.links[i]
-                if link.link_id not in list: 
-                    self.list.append(link.link_id)
-                    print(self.list)
+            for r in (len(liste)):
+                if r.nom == node.name:
+                    for ip in r.voisins:
+                        Config_adresse(node.name,ip["Adresse"],ip["Int"])
+    
+    def RIP_OSPF(self, liste):
+        for node in lab.nodes: #récupère les id de chaque lien 
+            node.get()
+            for r in (len(liste)):
+                if r.nom == node.name:
+                    if r.AS == 1: 
+                        RIP(node.name)
+                        for int_rip in r.voisins:
+                            RIP_int(node.name, int_rip["Int"])
+                    else:
+                        ID_OSPF(node.name,r.id)
+                        for int_ospf in r.voisins:
+                            OSPF(node.name, int_ospf["Int"])
+            
 
-        for lien in list: #crée un dictionnaire associant les id des liens et leurs masques d'adresse ip respectives 
-            self.adresses_routeur[lien] = "2001:100:1:"+str(num_r)+"::"
-            num_r += 1    
-        
+    def Config(self):
+        f = open("network_intent.json","r")
+        content = f.read()
+        obj=json.loads(content)
+
+        routeurs = obj["Routeurs"]
+
+        self.liste_routeurs = []
+        for r in routeurs :
+            r = Routeur(r["Nom"],r["ID"],r["AS"],r["Protocole"],r["Loopback"],r["Voisins"])
+            self.liste_routeurs.append(r)
+        return self.liste_routeurs
