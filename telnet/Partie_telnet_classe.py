@@ -62,18 +62,42 @@ class GNS3_telnet:
                         Config_adresse(node.name,ip["Adresse"],ip["Int"])
     
     def RIP_OSPF(self, liste):
-        for node in lab.nodes: #récupère les id de chaque lien 
-            node.get()
-            for r in (len(liste)):
-                if r.nom == node.name:
-                    if r.AS == 1: 
-                        RIP(node.name)
-                        for int_rip in r.voisins:
-                            RIP_int(node.name, int_rip["Int"])
-                    else:
-                        ID_OSPF(node.name,r.id)
-                        for int_ospf in r.voisins:
-                            OSPF(node.name, int_ospf["Int"])
+        for r in liste:
+            #Configurer les adresses physiques
+            for v in r.voisins :
+                Config_adresse(r.nom,v["Adresse"],v["Int"])
+
+                #Configurer les interfaces loopback 
+            Config_loopback(r.nom,r.loopback)
+
+                #Le routeur est dans l'AS X
+            if r.AS == "1" :
+                RIP(r.nom)
+                for v in r.voisins :
+                    RIP_int(r.nom, v["Int"])
+
+                #Le routeur est dans l'AS Y
+            if r.AS == "2" :
+                ID_OSPF(r.nom, r.id)
+                for v in r.voisins :
+                    if v["AS"] == r.AS :
+                        OSPF(r.nom, v["Int"])
+                    else : 
+                        OSPF_passif(r.nom, v["Int"])   
+                        OSPF(r.nom, v["Int"])  
+    
+    def BGP(self, liste):
+        for r in liste :
+            ID_BGP(r.nom,r.id,r.AS)
+            
+            for v in r.voisins :
+                # si routeur de bord : eBGP
+                if v["AS"] != r.AS : 
+                    eBGP(r.nom,v["Adresse_v"], v["AS"])
+            
+            for t in liste_routeurs : 
+                    if t.AS == r.AS and t.nom != r.nom :
+                        iBGP(r.nom,t.loopback,r.AS)
             
 
     def Config(self):
