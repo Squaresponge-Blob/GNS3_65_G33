@@ -37,7 +37,7 @@ for r in liste_routeurs :
     ID_BGP(r.nom,r.id,r.AS)
     
     for v in r.voisins :
-
+        
         # si routeur de bord : eBGP
         if v["AS"] != r.AS : 
             eBGP(r.nom,v["Adresse_v"], v["AS"])

@@ -83,7 +83,7 @@ def eBGP(RX, ad_n, AS_n, AS) :
     """
     Configure eBGP sur l'interface loopback du routeur RX
     """
-    tn.write(bytes("router bgp"+ AS +"\r",encoding= 'ascii'))
+    tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
     tn.write(bytes("neighbor "+ ad_n +" remote-as"+ AS_n +"\r",encoding= 'ascii'))
     tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
     tn.write(bytes("neighbor "+ ad_n +" activate\r",encoding= 'ascii'))
@@ -94,7 +94,7 @@ def eBGP_adv(RX, AS, prefix) :
     """
     Configure advertissement pour le routeur RX en eBGP
     """ 
-    tn.write(bytes("router bgp"+ AS +"\r",encoding= 'ascii'))
+    tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
     tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
     tn.write(bytes("network "+ prefix +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
