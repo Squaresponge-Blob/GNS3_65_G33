@@ -31,26 +31,7 @@ lab.status
 # Verify the stats
 lab.stats
 
-def Great_Explosion_Murder_God_Dynamight():
-    routeur = 1
-    num_r = 1
-    list = []
-    adresses_routeur = {}
-
-    for node in lab.nodes: #récupère les id de chaque lien 
-        node.get()
-        for i in range(len(node.links)):
-            link = node.links[i]
-            if link.link_id not in list: 
-                list.append(link.link_id)
-                print(list)
-
-    for lien in list: #crée un dictionnaire associant les id des liens et leurs masques d'adresse ip respectives 
-        adresses_routeur[lien] = "2001:100:1:"+str(num_r)+"::"
-        num_r += 1    
-    print(adresses_routeur)
-    return adresses_routeur
-                                          
+d     
 
 def find_ad(a, b, liste_routeurs) : 
     """

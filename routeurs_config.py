@@ -3,7 +3,7 @@ vérifie la position du routeur et lance les configurations nécessaires
 """
 
 from lecture_json import Routeur, liste_routeurs
-from Modif_config import *
+from fonctions_config import *
 
 liste_AS ={}
 liste_AS["1"] = []
