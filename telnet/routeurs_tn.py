@@ -2,7 +2,7 @@
 vérifie la position du routeur et lance les configurations nécessaires
 """
 
-from lecture_json import Routeur, liste_routeurs
+from drag_and_drop.lecture_json import Routeur, liste_routeurs
 from fonctions_tn import *
 
 

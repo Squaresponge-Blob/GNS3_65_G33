@@ -1,0 +1,192 @@
+{
+    "Routeurs":[
+        {   
+            "Nom":"R1",
+            "ID":"1.1.1.1",
+            "AS":"1",
+            "Protocole":"RIP",
+            "Loopback":"1000::1/128",
+            "Voisins":[
+                {"Nom":"R2","AS":"1","Int":"GigabitEthernet1/0","Adresse":"2001:100:1:1::1/64"},
+                {"Nom":"R3","AS":"1","Int":"GigabitEthernet2/0","Adresse":"2001:100:1:2::1/64"}
+            ]
+        },
+
+        {
+            "Nom":"R2",
+            "ID":"2.2.2.2",
+            "AS":"1",
+            "Protocole":"RIP",
+            "Loopback":"1000::2/128",
+            "Voisins":[
+                {"Nom":"R1","AS":"1","Int":"GigabitEthernet1/0","Adresse":"2001:100:1:1::2/64"},
+                {"Nom":"R3","AS":"1","Int":"GigabitEthernet2/0","Adresse":"2001:100:1:3::1/64"},
+                {"Nom":"R4","AS":"1","Int":"GigabitEthernet3/0","Adresse":"2001:100:1:4::1/64"}
+            ]
+        },
+
+        {
+            "Nom":"R3",
+            "ID":"3.3.3.3",
+            "AS":"1",
+            "Protocole":"RIP",
+            "Loopback":"1000::3/128",
+            "Voisins":[
+                {"Nom":"R1","AS":"1","Int":"GigabitEthernet1/0","Adresse":"2001:100:1:2::2/64"},
+                {"Nom":"R2","AS":"1","Int":"GigabitEthernet2/0","Adresse":"2001:100:1:3::2/64"},
+                {"Nom":"R5","AS":"1","Int":"GigabitEthernet3/0","Adresse":"2001:100:1:5::2/64"}
+
+            ]
+        },
+
+        {
+            "Nom":"R4",
+            "ID":"4.4.4.4",
+            "AS":"1",
+            "Protocole":"RIP",
+            "Loopback":"1000::4/128",
+            "Voisins":[
+                {"Nom":"R2","AS":"1","Int":"GigabitEthernet1/0","Adresse":"2001:100:1:4::2/64"},
+                {"Nom":"R5","AS":"1","Int":"GigabitEthernet2/0","Adresse":"2001:100:1:6::2/64"},
+                {"Nom":"R6","AS":"1","Int":"GigabitEthernet3/0","Adresse":"2001:100:1:7::2/64"},
+                {"Nom":"R7","AS":"1","Int":"GigabitEthernet4/0","Adresse":"2001:100:1:8::2/64"}
+
+            ]
+        },
+
+        {
+            "Nom":"R5",
+            "ID":"5.5.5.5",
+            "AS":"1",
+            "Protocole":"RIP",
+            "Loopback":"1000::5/128",
+            "Voisins":[
+                {"Nom":"R3","AS":"1","Int":"GigabitEthernet1/0","Adresse":"2001:100:1:5::1/64"},
+                {"Nom":"R4","AS":"1","Int":"GigabitEthernet2/0","Adresse":"2001:100:1:6::1/64"},
+                {"Nom":"R6","AS":"1","Int":"GigabitEthernet3/0","Adresse":"2001:100:1:9::2/64"},
+                {"Nom":"R7","AS":"1","Int":"GigabitEthernet4/0","Adresse":"2001:100:1:10::2/64"}
+
+            ]
+        },
+
+        {
+            "Nom":"R6",
+            "ID":"6.6.6.6",
+            "AS":"1",
+            "Protocole":"RIP",
+            "Loopback":"1000::6/128",
+            "Voisins":[
+                {"Nom":"R4","AS":"1","Int":"GigabitEthernet1/0","Adresse":"2001:100:1:7::1/64"},
+                {"Nom":"R5","AS":"1","Int":"GigabitEthernet2/0","Adresse":"2001:100:1:9::1/64"},
+                {"Nom":"R8","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:3:1::1/64","Adresse_v":"2001:100:3:1::2/64"}
+
+            ]
+        },
+
+        {
+            "Nom":"R7",
+            "ID":"7.7.7.7",
+            "AS":"1",
+            "Protocole":"RIP",
+            "Loopback":"1000::7/128",
+            "Voisins":[
+                {"Nom":"R4","AS":"1","Int":"GigabitEthernet1/0","Adresse":"2001:100:1:8::1/64"},
+                {"Nom":"R5","AS":"1","Int":"GigabitEthernet2/0","Adresse":"2001:100:1:10::1/64"},
+                {"Nom":"R9","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:3:2::1/64","Adresse_v":"2001:100:3:2::2/64"}
+
+            ]
+        },
+
+        {
+            "Nom":"R8",
+            "ID":"8.8.8.8",
+            "AS":"2",
+            "Protocole":"OSPF",
+            "Loopback":"2000::1/128",
+            "Voisins":[
+                {"Nom":"R6","AS":"1","Int":"GigabitEthernet1/0","Adresse":"2001:100:3:1::2/64","Adresse_v":"2001:100:3:1::1/64"},
+                {"Nom":"R10","AS":"2","Int":"GigabitEthernet2/0","Adresse":"2001:100:2:1::1/64"},
+                {"Nom":"R11","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:2:2::1/64"}
+            ]
+        },
+
+        {
+            "Nom":"R9",
+            "ID":"9.9.9.9",
+            "AS":"2",
+            "Protocole":"OSPF",
+            "Loopback":"2000::2/128",
+            "Voisins":[
+                {"Nom":"R7","AS":"1","Int":"GigabitEthernet1/0","Adresse":"2001:100:3:2::2/64","Adresse_v":"2001:100:3:2::1/64"},
+                {"Nom":"R10","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:2:3::1/64"},
+                {"Nom":"R11","AS":"2","Int":"GigabitEthernet2/0","Adresse":"2001:100:2:4::1/64"}
+            ]
+        },
+
+        {
+            "Nom":"R10",
+            "ID":"10.10.10.10",
+            "AS":"2",
+            "Protocole":"OSPF",
+            "Loopback":"2000::3/128",
+            "Voisins":[
+                {"Nom":"R8","AS":"2","Int":"GigabitEthernet2/0","Adresse":"2001:100:2:1::2/64"},
+                {"Nom":"R9","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:2:3::2/64"},
+                {"Nom":"R11","AS":"2","Int":"GigabitEthernet1/0","Adresse":"2001:100:2:5::1/64"},
+                {"Nom":"R12","AS":"2","Int":"GigabitEthernet4/0","Adresse":"2001:100:2:6::1/64"}
+            ]
+        },
+
+        {
+            "Nom":"R11",
+            "ID":"11.11.11.11",
+            "AS":"2",
+            "Protocole":"OSPF",
+            "Loopback":"2000::4/128",
+            "Voisins":[
+                {"Nom":"R8","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:2:2::2/64"},
+                {"Nom":"R9","AS":"2","Int":"GigabitEthernet2/0","Adresse":"2001:100:2:4::2/64"},
+                {"Nom":"R10","AS":"2","Int":"GigabitEthernet1/0","Adresse":"2001:100:2:5::2/64"},
+                {"Nom":"R13","AS":"2","Int":"GigabitEthernet4/0","Adresse":"2001:100:2:7::1/64"}
+            ]
+        },
+
+        {
+            "Nom":"R12",
+            "ID":"12.12.12.12",
+            "AS":"2",
+            "Protocole":"OSPF",
+            "Loopback":"2000::5/128",
+            "Voisins":[
+                {"Nom":"R10","AS":"2","Int":"GigabitEthernet4/0","Adresse":"2001:100:2:6::2/64"},
+                {"Nom":"R13","AS":"2","Int":"GigabitEthernet1/0","Adresse":"2001:100:2:8::1/64"},
+                {"Nom":"R14","AS":"2","Int":"GigabitEthernet2/0","Adresse":"2001:100:2:9::1/64"}
+            ]
+        },
+
+        {
+            "Nom":"R13",
+            "ID":"13.13.13.13",
+            "AS":"2",
+            "Protocole":"OSPF",
+            "Loopback":"2000::6/128",
+            "Voisins":[
+                {"Nom":"R11","AS":"2","Int":"GigabitEthernet4/0","Adresse":"2001:100:2:7::2/64"},
+                {"Nom":"R12","AS":"2","Int":"GigabitEthernet1/0","Adresse":"2001:100:2:8::2/64"},
+                {"Nom":"R14","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:2:10::1/64"}
+            ]
+        },
+
+        {
+            "Nom":"R14",
+            "ID":"14.14.14.14",
+            "AS":"2",
+            "Protocole":"OSPF",
+            "Loopback":"2000::7/128",
+            "Voisins":[
+                {"Nom":"R12","AS":"2","Int":"GigabitEthernet2/0","Adresse":"2001:100:2:9::2/64"},
+                {"Nom":"R13","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:2:10::2/64"}
+            ]
+        }
+    ]
+}
