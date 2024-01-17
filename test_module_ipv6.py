@@ -50,7 +50,6 @@ asy_asx = ip_network(asx_asy)
     time.sleep(1)
 """
 
-lien_parcouru = []
 adresses_routeur = {}
 num_r = 1
 list = []
