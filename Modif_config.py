@@ -31,7 +31,7 @@ lab.status
 # Verify the stats
 lab.stats
 
-def fichier_cfg():
+def Great_Explosion_Murder_God_Dynamight():
     routeur = 1
     num_r = 1
     list = []
@@ -49,7 +49,12 @@ def fichier_cfg():
         adresses_routeur[lien] = "2001:100:1:"+str(num_r)+"::"
         num_r += 1    
     print(adresses_routeur)
+    return adresses_routeur
+     
 
+def fichier_cfg():
+    adresses_routeur = Great_Explosion_Murder_God_Dynamight()
+    routeur = 1 
     for node in lab.nodes: 
         node.get()
         chemin = node.node_directory + "/configs/i"+str(routeur)+"_startup-config.cfg"
@@ -124,11 +129,71 @@ line aux 0
 !
 end
 """
-                            f.write(conf)                       
-                            
-                            
-                            
-                            
-                            
-x = fichier_cfg()        
+                            f.write(conf)                                        
+
+
+def Int_RIP(config):
+    config += " ipv6 rip ripng enable\n!"
+    return config
+
+def Int_OSPF(config):
+    config += " ipv6 ospf 1 area 0\n !"
+    return config 
+     
+def Config_BGP(config, AS, id):
+    config += f"router bgp {AS}\n bgp router-id {id}\n bgp log-neighbor-changes\n no bgp default ipv4-unicast\n"
+    return config
+
+def Config_iBGP(config,adresse):
+    config += f"neighbor {adresse} update-source Loopback0\n"
+    return config
+     
+def Config_BGP_neighbor(config,adresse,AS):
+    config += f" neighbor {adresse} remote-as {AS}\n"
+    return config
+     
+def Config_int_passif(config,Int):
+    config += f"router ospf 1\n passive-interface {Int}\n!"
+    return config 
+
+def Config_interface(config,Int,adresse):
+    config += f"{Int}\n no ip address\n negotiation auto\n ipv6 address {adresse}\n ipv6 enable\n"
+    return config
+
+def Config_Loop(config,Int,adresse):
+    config += f"{Int}\n no ip address\n ipv6 address {adresse}\n ipv6 enable\n"
+    return config
+
+def Config_BGP2(config):
+    config += f" address-family ipv6\n"
+    return config
+
+def Config_BGP_activate(config, adresse):
+    config += f"  neighbor {adresse} activate\n"
+    return config
+
+def Config_RIP(config,id): 
+    config += "ipv6 router rip ripng\n redistribute connected\n"
+    return config
+
+def Config_OSPF(config,id):
+    config += f"ipv6 router ospf 1\n router-id {id}\n"
+    return config
+
+def Config_fin(config):
+    config += f"control-plane\n!\n!\nline con 0\n exec-timeout 0 0\n privilege level 15\n logging synchronous\n stopbits 1\nline aux 0\n exec-timeout 0 0\n privilege level 15\n logging synchronous\n stopbits 1\nline vty 0 4\n login\n!\n!\nend"
+    return config
+
+def Ecrire_dans_fichier(config, nom):
+    routeur = 1
+    for node in lab.nodes: 
+        node.get()
+        if nom == node.name:
+            chemin = node.node_directory + "/configs/i"+str(routeur)+"_startup-config.cfg"
+        routeur += 1
+    f = open(chemin,"wt")
+    f.write(config)
+
         
+           
+
