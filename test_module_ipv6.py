@@ -9,8 +9,9 @@ from ipaddress import IPv6Address, ip_network
 # Define the server object to establish the connection
 gns3_server = gns3fy.Gns3Connector(url ="http://localhost:3080")
 
-# Define the lab you want to load and assign the server connector
-lab = gns3fy.Project(name="TEST", connector=gns3_server)
+# Define the lab you want to load and assign the 
+lab = gns3fy.Project(name="Projet", connector=gns3_server)
+
 
 print(
         tabulate(
@@ -33,12 +34,6 @@ lab.status
 
 # Verify the stats
 lab.stats
-#nb_as = int(input("Combien d'AS désirez-vous?"))
-#while type(nb_as) != int or nb_as < 0 :
-#   nb_as = int(input("Erreur mettez un entier, combien d'AS désirez-vous?"))
-
-nb_interconnexion = 0
-snb_interconnexion = "1"
 
 # List the names and status of all the nodes in the project
 sub_asx = "2001:100:1:1::/64"
@@ -55,8 +50,6 @@ asy_asx = ip_network(asx_asy)
         break
     time.sleep(1)
 """
-
-lien_parcouru = []
 adresses_routeur = {}
 num_r = 1
 list = []
@@ -73,13 +66,17 @@ for lien in list: #crée un dictionnaire associant les id des liens et leurs mas
     adresses_routeur[lien] = "2001:100:1:"+str(num_r)+"::"
     num_r += 1    
 print(adresses_routeur)
-    
+
+
+int_utilisées = {}
+
 for node in lab.nodes:        
     node.get()#récupère les informations du noeud
     node.start()
     print(node.node_directory) #Important le fichier config a pour chemin node.node_directory + configs
     print(f"Node: {node.name} -- Node Type: {node.node_type} -- Status: {node.status}\n")
-    
+    int_utilisées[node.node_id] = []
+  
     tn = telnetlib.Telnet(node.console_host,str(node.console))
     tn.write(bytes("\r",encoding= 'ascii'))
     tn.write(bytes("\r",encoding= 'ascii'))
@@ -97,13 +94,16 @@ for node in lab.nodes:
                         interface = link.nodes[k]["label"]["text"]
                         print(interface)
                         print(sub[k]+1)
-                    
-                        tn.write(bytes("int "+ interface+"\r",encoding= 'ascii'))
-                        tn.write(bytes("ipv6 enable\r",encoding= 'ascii'))
-                        tn.write(bytes("ipv6 address " + str(sub[k] + 1) +"/64\r",encoding= 'ascii'))
-                        time.sleep(1)
-                        tn.write(bytes("no shutdown\r",encoding= 'ascii'))
-                        tn.write(bytes("exit\r",encoding= 'ascii'))
+
+                        if interface not in int_utilisées[node.node_id]:
+                            int_utilisées[node.node_id].append(interface)
+                            tn.write(bytes("int "+ interface+"\r",encoding= 'ascii'))
+                            tn.write(bytes("ipv6 enable\r",encoding= 'ascii'))
+                            tn.write(bytes("ipv6 address " + str(sub[k] + 1) +"/64\r",encoding= 'ascii'))
+                            time.sleep(1)
+                            tn.write(bytes("no shutdown\r",encoding= 'ascii'))
+                            tn.write(bytes("exit\r",encoding= 'ascii'))
+
 
     tn.write(bytes("end\r",encoding= 'ascii'))
     #res = tn.read_very_eager().decode('utf-8')
