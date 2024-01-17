@@ -4,7 +4,7 @@ from tabulate import tabulate
 import telnetlib
 import time 
 import json
-from drag_and_drop.lecture_json import Routeur
+from lecture_json import Routeur
 from ipaddress import IPv6Address, ip_network
 
 
