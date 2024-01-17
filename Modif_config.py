@@ -9,7 +9,7 @@ from ipaddress import IPv6Address, ip_network
 gns3_server = gns3fy.Gns3Connector(url ="http://localhost:3080")
 
 # Define the lab you want to load and assign the server connector
-lab = gns3fy.Project(name="TEST", connector=gns3_server)
+lab = gns3fy.Project(name="config_test", connector=gns3_server)
 
 print(
         tabulate(
@@ -162,11 +162,11 @@ def Config_iBGP(config,adresse):
     return config
 
 def Config_BGP2(config):
-    config += f" !\n address-family ipv6\n"
+    config += f" !\n address-family ipv4\n exit-address-family\n !\n address-family ipv6\n"
     return config
 
 def Config_BGP_adv(config, network) :
-    config += f"  network {network}"
+    config += f"  network {network}\n"
     return config
 
 def Config_BGP_activate(config, adresse):

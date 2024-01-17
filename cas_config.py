@@ -5,6 +5,12 @@ vérifie la position du routeur et lance les configurations nécessaires
 from lecture_json import Routeur, liste_routeurs
 from Modif_config import *
 
+liste_AS ={}
+liste_AS["1"] = []
+liste_AS["2"] = []
+for r in liste_routeurs :
+    liste_AS[r.AS].append(r)
+
 for r in liste_routeurs :
 
     config = ""
@@ -34,24 +40,38 @@ for r in liste_routeurs :
     #BGP
     
     config = Config_BGP(config, r.AS, r.id) # bloc commun pour tous les routeurs (en eBGP et iBGP)
-    for v in r.voisins :
-
-        adresse_v = find_ad(r.nom, v["Nom"],liste_routeurs)   
-        config = Config_BGP_neighbor(config,adresse_v,v["AS"]) # ligne neighbor [adresse_v] remote-as [AS]
-        
-        #iBGP
-        if v["AS"] == r.AS :
-            config = Config_iBGP(config,adresse_v) # ligne neighbor [adresse_v] update-source Loopback0
     
+    for r2 in liste_AS[r.AS] :
+        if r2.nom != r.nom :
+            config = Config_BGP_neighbor(config,r2.loopback[:7],r2.AS)
+            config = Config_iBGP(config, r2.loopback[:7])
+    if routeurBord(r) :
+        for v in r.voisins : 
+            if v["AS"] != r.AS :
+                adresse_v = find_ad(r.nom, v["Nom"],liste_routeurs)
+                config = Config_BGP_neighbor(config,adresse_v[:15],v["AS"]) # ligne neighbor [adresse_v] remote-as [AS]
+    
+
     config = Config_BGP2(config) #address-family ipv6
 
-    #Network advertisement pour routeurs de bords A COMPLETER !!!!!
-    # if routeurBord(r) : 
-    #     config = Config_BGP_adv(config,NETWORK)
+    #Network advertisement pour routeurs de bords 
+    if routeurBord(r) : 
+        for i in range (1,11) :
+            network = "2001:100:"+r.AS+":"+str(i)+"::/64"
+            config = Config_BGP_adv(config,network)
+        for v in r.voisins :
+            if v["AS"]!=r.AS :
+                network = v["Adresse"][:14]+"/64"
+                config = Config_BGP_adv(config,network)
 
-    for v in r.voisins :
-        adresse_v = find_ad(r.nom, v["Nom"],liste_routeurs) 
-        config = Config_BGP_activate(config,adresse_v) # la partie qui activate
+    for r2 in liste_AS[r.AS] :
+        if r2.nom != r.nom :
+            config = Config_BGP_activate(config, r2.loopback[:7])
+    if routeurBord(r) :
+        for v in r.voisins : 
+            if v["AS"] != r.AS :
+                adresse_v = find_ad(r.nom, v["Nom"],liste_routeurs)
+                config = Config_BGP_activate(config,adresse_v[:15]) # ligne neighbor [adresse_v] remote-as [AS]
     
     config = Config_BGP_exit(config)
 
@@ -64,9 +84,9 @@ for r in liste_routeurs :
 
 
     config = Config_fin(config) #trucs à la fin
-    print(config)
 
-    #Ecrire_dans_fichier(config,r.nom) 
+    print(f"***Config de {r.nom} en cours d'écriture***")
 
+    Ecrire_dans_fichier(config,r.nom) 
+    print(f"***Config de {r.nom} faite***")
 
-    
