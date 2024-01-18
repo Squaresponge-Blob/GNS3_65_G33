@@ -1,4 +1,6 @@
-def Config_adresse(RX, adresse, int) :
+import time 
+
+def Config_adresse(RX, adresse, int,tn) :
     """
     Configuration de l'adresse (str) du routeur RX (str) sur l'interface int (str)
     """
@@ -8,7 +10,7 @@ def Config_adresse(RX, adresse, int) :
     tn.write(bytes("no shutdown\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
-def Config_loopback(RX,loopback) : 
+def Config_loopback(RX,loopback,tn) : 
     """
     Configuration de l'adresse loopback (str) du routeur RX (str)
     """
@@ -18,7 +20,7 @@ def Config_loopback(RX,loopback) :
     tn.write(bytes("no shutdown\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
-def RIP(RX) : 
+def RIP(RX,tn) : 
     """
     Fait les configurations nécessaires pour lancer RIP sur le routeur RX
     """
@@ -26,7 +28,7 @@ def RIP(RX) :
     tn.write(bytes("redistribute connected\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
-def RIP_int(RX, int) :
+def RIP_int(RX, int,tn) :
     """
     Configure RIP sur l'interface int du routeur RX
     """
@@ -34,7 +36,7 @@ def RIP_int(RX, int) :
     tn.write(bytes("ipv6 rip ripng enable\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
     
-def ID_OSPF(RX,id) :
+def ID_OSPF(RX,id,tn) :
     """
     Config le routeur id pour OSPF
     """
@@ -42,7 +44,7 @@ def ID_OSPF(RX,id) :
     tn.write(bytes("router-id "+ id +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
     
-def OSPF(RX,int) :
+def OSPF(RX,int,tn) :
     """
     Configure OSPF sur l'interface int du routeur RX
     """
@@ -50,7 +52,7 @@ def OSPF(RX,int) :
     tn.write(bytes("ipv6 ospf 1 area 0\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
-def OSPF_passif(RX,int) :
+def OSPF_passif(RX,int,tn) :
     """
     Met l'interface int du routeur RX configurée avec OSPF en passif
     """
@@ -58,7 +60,7 @@ def OSPF_passif(RX,int) :
     tn.write(bytes("passive-interface "+ int +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
-def ID_BGP(RX, id, AS) :
+def ID_BGP(RX, id, AS,tn) :
     """
     Config le routeur id pour BGP
     """
@@ -67,34 +69,37 @@ def ID_BGP(RX, id, AS) :
     tn.write(bytes("bgp router-id "+ id +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
-def iBGP(RX, ad_n, AS) :
+def iBGP(RX, ad_n, AS,tn) :
     """
     Configure iBGP sur l'interface loopback du routeur RX
     """
     tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
-    tn.write(bytes("neighbor "+ ad_n +" remote-as"+ AS +"\r",encoding= 'ascii'))
+    time.sleep(0.5)
+    tn.write(bytes("neighbor "+ ad_n +" remote-as "+ AS +"\r",encoding= 'ascii'))
     tn.write(bytes("neighbor "+ ad_n +" update-source l0\r",encoding= 'ascii'))
     tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
     tn.write(bytes("neighbor "+ ad_n +" activate\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))    
 
-def eBGP(RX, ad_n, AS_n, AS) :
+def eBGP(RX, ad_n, AS_n, AS,tn) :
     """
     Configure eBGP sur l'interface loopback du routeur RX
     """
     tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
-    tn.write(bytes("neighbor "+ ad_n +" remote-as"+ AS_n +"\r",encoding= 'ascii'))
+    time.sleep(0.5)
+    tn.write(bytes("neighbor "+ ad_n +" remote-as "+ AS_n +"\r",encoding= 'ascii'))
     tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
     tn.write(bytes("neighbor "+ ad_n +" activate\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii')) 
 
-def eBGP_adv(RX, AS, prefix) :
+def eBGP_adv(RX, AS, prefix,tn) :
     """
     Configure advertissement pour le routeur RX en eBGP
     """ 
     tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
+    time.sleep(0.5)
     tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
     tn.write(bytes("network "+ prefix +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))

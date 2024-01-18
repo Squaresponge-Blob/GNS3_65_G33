@@ -38,48 +38,70 @@ class GNS3_telnet:
         self.liste = liste
         self.dico_routeurs = dico_routeurs
         
-    def IPv6_LOOP_RIP_OSPF(self, liste, dico_routeurs):
-        for r in liste:
-            routeur_config = dico_routeurs[r.nom]
+    def IPv6_LOOP_RIP_OSPF(self):
+        for r in self.liste:
+            print("le routeur traité est:",r.nom)
+            routeur_config = self.dico_routeurs[r.nom]
             tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+            tn.write(bytes("configure terminal\r",encoding= 'ascii'))
+            tn.write(bytes("ipv6 unicast-routing\r",encoding= 'ascii'))
             #Configurer les adresses physiques
             for v in r.voisins :
-                Config_adresse(r.nom,v["Adresse"],v["Int"])
+                Config_adresse(r.nom,v["Adresse"],v["Int"],tn)
 
                 #Configurer les interfaces loopback 
-            Config_loopback(r.nom,r.loopback)
+            Config_loopback(r.nom,r.loopback,tn)
 
                 #Le routeur est dans l'AS X
             if r.AS == "1" :
-                RIP(r.nom)
+                RIP(r.nom,tn)
                 for v in r.voisins :
-                    RIP_int(r.nom, v["Int"])
+                    time.sleep(0.5)
+                    RIP_int(r.nom, v["Int"],tn)
 
                 #Le routeur est dans l'AS Y
             if r.AS == "2" :
-                ID_OSPF(r.nom, r.id)
+                ID_OSPF(r.nom, r.id,tn)
                 for v in r.voisins :
+                    time.sleep(0.5)
                     if v["AS"] == r.AS :
-                        OSPF(r.nom, v["Int"])
+                        OSPF(r.nom, v["Int"],tn)
                     else : 
-                        OSPF_passif(r.nom, v["Int"])   
-                        OSPF(r.nom, v["Int"])  
+                        OSPF_passif(r.nom, v["Int"],tn)   
+                        OSPF(r.nom, v["Int"],tn)
+            tn.write(bytes("end\r",encoding= 'ascii'))  
     
-    def BGP(self, liste, dico_routeurs):
-        routeur_config = dico_routeurs[r.nom]
-        tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
-        for r in liste :
-
-            ID_BGP(r.nom,r.id,r.AS)
-            
+    def BGP(self):
+        for r in self.liste :
+            print("le routeur traité est:",r.nom)
+            routeur_config = self.dico_routeurs[r.nom]
+            tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+            tn.write(bytes("configure terminal\r",encoding= 'ascii'))
+            ID_BGP(r.nom,r.id,r.AS,tn)
             for v in r.voisins :
+                time.sleep(0.5)
+                if len(v["Adresse"])== 18:
+                    prefixe = v["Adresse"][:14] +v["Adresse"][15:]
+                    print(prefixe)
+                else:
+                    prefixe = v["Adresse"][:15] +v["Adresse"][16:]
+                    print(prefixe)
+                eBGP_adv(r.nom, r.AS, prefixe,tn)
                 # si routeur de bord : eBGP
                 if v["AS"] != r.AS : 
-                    eBGP(r.nom,v["Adresse_v"], v["AS"])
+                    eBGP(r.nom,v["Adresse_v"], v["AS"],r.AS,tn)
+                    if len(v["Adresse"]) == 18:
+                        prefixe = v["Adresse_v"][:14] +v["Adresse_v"][15:]
+                        print(prefixe)
+                    else:
+                        prefixe = v["Adresse_v"][:15] +v["Adresse_v"][16:]
+                        print(prefixe)
+                    eBGP_adv(r.nom, r.AS, prefixe,tn)
             
-            for t in liste : 
+            for t in self.liste : 
                     if t.AS == r.AS and t.nom != r.nom :
-                        iBGP(r.nom,t.loopback,r.AS)
+                        iBGP(r.nom,t.loopback,r.AS,tn)
+            tn.write(bytes("end\r",encoding= 'ascii'))
 
 def Config():
         f = open("network_intent.json","r")
@@ -89,21 +111,24 @@ def Config():
         routeurs = obj["Routeurs"]
 
         l = []
+        dico_routeurs = {}
 
         for r in routeurs :
             r = Routeur(r["Nom"],r["ID"],r["AS"],r["Protocole"],r["Loopback"],r["Voisins"])
             l.append(r)
-        return l
+        liste = l
 
+        for node in lab.nodes:
+                node.get()#récupère les informations du noeud
+                node.start()
+                print(f"Node: {node.name} -- Node Type: {node.node_type} -- Status: {node.status}\n")
+                dico_routeurs[node.name] = [node.console_host,str(node.console)]
+        return l, dico_routeurs
 
-liste_routeurs = Config()
-dico_routeurs_gns3 = {}
-for node in lab.nodes:
-        node.get()#récupère les informations du noeud
-        node.start()
-        print(f"Node: {node.name} -- Node Type: {node.node_type} -- Status: {node.status}\n")
-        dico_routeurs_gns3[node.name] = [node.console_host,str(node.console)]
-GNS3_telnet(liste_routeurs,dico_routeurs_gns3)                    
+l,d = Config()
+x = GNS3_telnet(l,d)
+x.IPv6_LOOP_RIP_OSPF()
+x.BGP()                    
 
 
 
