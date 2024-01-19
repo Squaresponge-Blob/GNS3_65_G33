@@ -121,6 +121,10 @@ def Int_OSPF(config):
     config += " ipv6 ospf 1 area 0\n !\n"
     return config 
 
+def Int_OSPF_cost(cost):
+    config += f" ipv6 ospf cost {cost}\n"
+    return config
+
 def Config_Loop(config,Int,adresse):
     config += f"interface {Int}\n no ip address\n ipv6 address {adresse}\n ipv6 enable\n"
     return config
