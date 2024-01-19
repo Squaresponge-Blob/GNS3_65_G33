@@ -81,6 +81,7 @@ class GNS3_telnet:
 
             tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
             tn.write(bytes("configure terminal\r",encoding= 'ascii'))
+            time.sleep(0.5)
             ID_BGP(r.nom,r.id,r.AS,tn)
 
             for v in r.voisins :
@@ -94,8 +95,16 @@ class GNS3_telnet:
                 eBGP_adv(r.nom, r.AS, prefixe,tn)
 
                 # si routeur de bord : eBGP
-                if v["AS"] != r.AS : 
-                    eBGP(r.nom,v["Adresse_v"], v["AS"],r.AS,tn)
+                if v["AS"] != r.AS :
+
+                    if len(v["Adresse_v"])== 18:
+                        adresse_v = v["Adresse_v"][:15] 
+                        print(prefixe)
+                    else:
+                        adresse_v = v["Adresse"][:16] 
+                        print(adresse_v) 
+                    eBGP(r.nom,adresse_v, v["AS"],r.AS,tn)
+
                     if len(v["Adresse"]) == 18:
                         prefixe = v["Adresse_v"][:14] +v["Adresse_v"][15:]
                         print(prefixe)
@@ -107,7 +116,8 @@ class GNS3_telnet:
             print("configuration de l'iBGP")
             for t in self.liste : 
                     if t.AS == r.AS and t.nom != r.nom :
-                        iBGP(r.nom,t.loopback,r.AS,tn)
+                        loop = t.loopback[:7]
+                        iBGP(r.nom,loop,r.AS,tn)
             tn.write(bytes("end\r",encoding= 'ascii'))
 
 def Config():
