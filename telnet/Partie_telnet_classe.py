@@ -54,6 +54,7 @@ class GNS3_telnet:
 
                 #Le routeur est dans l'AS X
             if r.AS == "1" :
+                print("configuration du routeur en RIP")
                 RIP(r.nom,tn)
                 for v in r.voisins :
                     time.sleep(0.5)
@@ -61,6 +62,7 @@ class GNS3_telnet:
 
                 #Le routeur est dans l'AS Y
             if r.AS == "2" :
+                print("configuration du routeur en OSPF")
                 ID_OSPF(r.nom, r.id,tn)
                 for v in r.voisins :
                     time.sleep(0.5)
@@ -74,10 +76,13 @@ class GNS3_telnet:
     def BGP(self):
         for r in self.liste :
             print("le routeur traité est:",r.nom)
+            print("configuration du routeur en BGP")
             routeur_config = self.dico_routeurs[r.nom]
+
             tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
             tn.write(bytes("configure terminal\r",encoding= 'ascii'))
             ID_BGP(r.nom,r.id,r.AS,tn)
+
             for v in r.voisins :
                 time.sleep(0.5)
                 if len(v["Adresse"])== 18:
@@ -87,6 +92,7 @@ class GNS3_telnet:
                     prefixe = v["Adresse"][:15] +v["Adresse"][16:]
                     print(prefixe)
                 eBGP_adv(r.nom, r.AS, prefixe,tn)
+
                 # si routeur de bord : eBGP
                 if v["AS"] != r.AS : 
                     eBGP(r.nom,v["Adresse_v"], v["AS"],r.AS,tn)
@@ -97,7 +103,8 @@ class GNS3_telnet:
                         prefixe = v["Adresse_v"][:15] +v["Adresse_v"][16:]
                         print(prefixe)
                     eBGP_adv(r.nom, r.AS, prefixe,tn)
-            
+
+            print("configuration de l'iBGP")
             for t in self.liste : 
                     if t.AS == r.AS and t.nom != r.nom :
                         iBGP(r.nom,t.loopback,r.AS,tn)
@@ -116,7 +123,6 @@ def Config():
         for r in routeurs :
             r = Routeur(r["Nom"],r["ID"],r["AS"],r["Protocole"],r["Loopback"],r["Voisins"])
             l.append(r)
-        liste = l
 
         for node in lab.nodes:
                 node.get()#récupère les informations du noeud
