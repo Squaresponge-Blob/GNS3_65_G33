@@ -37,8 +37,7 @@ for r in liste_routeurs :
         config = Config_int_passif(config,v["Int"])
 
     
-    #BGP
-    
+    #BGP    
     config = Config_BGP(config, r.AS, r.id) # bloc commun pour tous les routeurs (en eBGP et iBGP)
     
     for r2 in liste_AS[r.AS] :
