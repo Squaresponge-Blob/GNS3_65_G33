@@ -52,6 +52,14 @@ def OSPF(RX,int,tn) :
     tn.write(bytes("ipv6 ospf 1 area 0\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
 
+def OSPF_cost(RX,int,cost,tn) :
+    """
+    Configure OSPF sur l'interface int du routeur RX
+    """
+    tn.write(bytes("int "+ int +"\r",encoding= 'ascii'))
+    tn.write(bytes("ipv6 ospf cost "+ cost +"\r",encoding= 'ascii'))
+    tn.write(bytes("exit\r",encoding= 'ascii'))
+
 def OSPF_passif(RX,int,tn) :
     """
     Met l'interface int du routeur RX configurée avec OSPF en passif
