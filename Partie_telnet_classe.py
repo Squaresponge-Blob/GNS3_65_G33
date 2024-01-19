@@ -1,17 +1,19 @@
-import gns3fy
-from Modif_config import routeurBord
+from gns3fy import Gns3Connector, Project,Node
+#from Modif_config import routeurBord
 from tabulate import tabulate
 import telnetlib
 import time 
 import json
+from lecture_json import Routeur
 from ipaddress import IPv6Address, ip_network
 
 
 # Define the server object to establish the connection
-gns3_server = gns3fy.Gns3Connector(url ="http://localhost:3080")
+gns3_server = Gns3Connector(url ="http://localhost:3080")
 
 # Define the lab you want to load and assign the server connector
-lab = gns3fy.Project(name="TEST", connector=gns3_server)
+lab = Project(name="Projet", connector=gns3_server)
+lab.get()
 
 print(
         tabulate(
@@ -20,17 +22,23 @@ print(
         )
     )
 
-# Retrieve its information and display
-lab.get()
-print(lab)
-
-
 # Access the project attributes
 print(f"Name: {lab.name} -- Status: {lab.status} -- Is auto_closed?: {lab.auto_close}\n")
 
 # Open the project
 lab.open()
 lab.status
+
+f = open("network_intent.json","r")
+content = f.read()
+obj=json.loads(content)
+
+routeurs = obj["Routeurs"]
+
+liste_routeurs = []
+for r in routeurs :
+    r = Routeur(r["Nom"],r["ID"],r["AS"],r["Protocole"],r["Loopback"],r["Voisins"])
+    liste_routeurs.append(r)
 
 # Verify the stats
 lab.stats
@@ -45,12 +53,12 @@ class GNS3_telnet:
         self.voisins = voisins
         self.masque = masque 
     
-    def IPv6(self, masque): 
+    def IPv6(self, nom, AS): 
         self.adresses_routeur = {}
         num_r = 1
-        self.list = []
-
-
+        self.AS_1 = []
+        self.AS_2 = []
+        self.bord = []
         for node in lab.nodes: #récupère les id de chaque lien 
             node.get()
             for i in range(len(node.links)):
@@ -62,5 +70,4 @@ class GNS3_telnet:
         for lien in list: #crée un dictionnaire associant les id des liens et leurs masques d'adresse ip respectives 
             self.adresses_routeur[lien] = "2001:100:1:"+str(num_r)+"::"
             num_r += 1    
-
         
