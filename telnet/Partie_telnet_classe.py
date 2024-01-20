@@ -78,6 +78,8 @@ class GNS3_telnet:
             tn.write(bytes("end\r",encoding= 'ascii'))  
     
     def BGP(self):
+        l_prefixes_AS_1 = []
+        l_prefixes_AS_2 = []
         for r in self.liste :
             print("le routeur traité est:",r.nom)
             print("configuration du routeur en BGP")
@@ -85,46 +87,63 @@ class GNS3_telnet:
 
             tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
             tn.write(bytes("configure terminal\r",encoding= 'ascii'))
-            time.sleep(0.5)
+            #time.sleep(0.5)
             ID_BGP(r.nom,r.id,r.AS,tn)
 
             for v in r.voisins :
+
+                if len(v["Adresse"]) == 18:
+                    prefixe_1 = v["Adresse"][:12]+"::/64"         
+                else:
+                    prefixe_1 = v["Adresse"][:13]+"::/64"
+                print(prefixe_1)    
+                            
+                if v["AS"] == "1":
+                    if prefixe_1 not in l_prefixes_AS_1:
+                        l_prefixes_AS_1.append(prefixe_1)
+                    print(l_prefixes_AS_1)
+                
+                if v["AS"] == "2":
+                    if prefixe_1 not in l_prefixes_AS_2:
+                        l_prefixes_AS_2.append(prefixe_1)
+                    print(l_prefixes_AS_2)
+
+            
                 # si routeur de bord : eBGP
                 if v["AS"] != r.AS :
                     for n in r.voisins:
                         if len(n["Adresse"])== 18:
                             adresse = n["Adresse"][:15] 
-                            print(adresse)
+                            #print(adresse)
                         else:
                             adresse = n["Adresse"][:16] 
-                            print(adresse) 
+                            #print(adresse) 
                         eBGP(r.nom,adresse, n["AS"],r.AS,tn)
 
                         if len(n["Adresse"]) == 18:
                             if n["Adresse"][9] == '3':
                                 prefixe = n["Adresse"][:12]+"::/64"
-                                print(prefixe)
+                                #print(prefixe)
                             else:
                                 prefixe = n["Adresse"][:11]+":/64"
-                                print(prefixe)
+                                #print(prefixe)
                         else:
                             if n["Adresse"][9] == '3':
                                 prefixe = n["Adresse"][:13]+"::/64"
-                                print(prefixe)
+                                #print(prefixe)
                             else:
                                 prefixe = n["Adresse"][:12]+":/64"
-                                print(prefixe)
+                                #print(prefixe)
                         eBGP_adv(r.nom, r.AS, prefixe,tn)
 
                         if n["AS"]!= r.AS:
                             if len(n["Adresse_v"])== 18:
                                 adresse_v = n["Adresse_v"][:15] 
-                                print(adresse_v)
+                                #print(adresse_v)
                             else:
                                 adresse_v = n["Adresse_v"][:16] 
-                                print(adresse_v) 
+                                #print(adresse_v) 
                             eBGP(r.nom,adresse_v, n["AS"],r.AS,tn)
-
 
             print("configuration de l'iBGP")
             for t in self.liste : 
@@ -142,6 +161,26 @@ class GNS3_telnet:
             tn.write(bytes("clear bgp ipv6 unicast *\r",encoding= 'ascii'))
             tn.write(bytes("end\r",encoding= 'ascii'))
         """
+        print(l_prefixes_AS_1)
+        print(l_prefixes_AS_2)
+        for r in self.liste :
+            print("le routeur traité est:",r.nom)
+            print("configuration du routeur en BGP")
+            routeur_config = self.dico_routeurs[r.nom]
+
+            tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+            tn.write(bytes("configure terminal\r",encoding= 'ascii'))
+            for v in r.voisins: 
+                if v["AS"] != r.AS :
+                    if r.AS == "1": 
+                        for ad in l_prefixes_AS_1:
+                            eBGP_adv(r.nom, r.AS, ad,tn)
+                    else:
+                        for ad in l_prefixes_AS_2:
+                            eBGP_adv(r.nom, r.AS, ad,tn)
+            tn.write(bytes("end\r",encoding= 'ascii'))
+
+
 def Config():
         f = open("network_intent.json","r")
         content = f.read()
@@ -165,7 +204,7 @@ def Config():
 
 l,d = Config()
 x = GNS3_telnet(l,d)
-#x.IPv6_LOOP_RIP_OSPF()
+x.IPv6_LOOP_RIP_OSPF()
 x.BGP()                    
 
 
