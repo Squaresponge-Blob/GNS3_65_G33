@@ -56,6 +56,9 @@ class GNS3_telnet:
             if r.AS == "1" :
                 print("configuration du routeur en RIP")
                 RIP(r.nom,tn)
+                time.sleep
+                RIP_int(r.nom,"l0",tn)
+                time.sleep(1)
                 for v in r.voisins :
                     time.sleep(0.5)
                     RIP_int(r.nom, v["Int"],tn)
@@ -64,6 +67,7 @@ class GNS3_telnet:
             if r.AS == "2" :
                 print("configuration du routeur en OSPF")
                 ID_OSPF(r.nom, r.id,tn)
+                OSPF(r.nom,"l0",tn)
                 for v in r.voisins :
                     time.sleep(0.5)
                     if v["AS"] == r.AS :
@@ -85,39 +89,57 @@ class GNS3_telnet:
             ID_BGP(r.nom,r.id,r.AS,tn)
 
             for v in r.voisins :
-                time.sleep(0.5)
-                if len(v["Adresse"])== 18:
-                    prefixe = v["Adresse"][:14] +v["Adresse"][15:]
-                    print(prefixe)
-                else:
-                    prefixe = v["Adresse"][:15] +v["Adresse"][16:]
-                    print(prefixe)
-                eBGP_adv(r.nom, r.AS, prefixe,tn)
-
                 # si routeur de bord : eBGP
                 if v["AS"] != r.AS :
+                    for n in r.voisins:
+                        if len(n["Adresse"])== 18:
+                            adresse = n["Adresse"][:15] 
+                            print(adresse)
+                        else:
+                            adresse = n["Adresse"][:16] 
+                            print(adresse) 
+                        eBGP(r.nom,adresse, n["AS"],r.AS,tn)
 
-                    if len(v["Adresse_v"])== 18:
-                        adresse_v = v["Adresse_v"][:15] 
-                        print(prefixe)
-                    else:
-                        adresse_v = v["Adresse"][:16] 
-                        print(adresse_v) 
-                    eBGP(r.nom,adresse_v, v["AS"],r.AS,tn)
+                        if len(n["Adresse"]) == 18:
+                            if n["Adresse"][9] == '3':
+                                prefixe = n["Adresse"][:12]+"::/64"
+                                print(prefixe)
+                            else:
+                                prefixe = n["Adresse"][:11]+":/64"
+                                print(prefixe)
+                        else:
+                            if n["Adresse"][9] == '3':
+                                prefixe = n["Adresse"][:13]+"::/64"
+                                print(prefixe)
+                            else:
+                                prefixe = n["Adresse"][:12]+":/64"
+                                print(prefixe)
+                        eBGP_adv(r.nom, r.AS, prefixe,tn)
 
-                    if len(v["Adresse"]) == 18:
-                        prefixe = v["Adresse_v"][:14] +v["Adresse_v"][15:]
-                        print(prefixe)
-                    else:
-                        prefixe = v["Adresse_v"][:15] +v["Adresse_v"][16:]
-                        print(prefixe)
-                    eBGP_adv(r.nom, r.AS, prefixe,tn)
+                        if n["AS"]!= r.AS:
+                            if len(n["Adresse_v"])== 18:
+                                adresse_v = n["Adresse_v"][:15] 
+                                print(adresse_v)
+                            else:
+                                adresse_v = n["Adresse_v"][:16] 
+                                print(adresse_v) 
+                            eBGP(r.nom,adresse_v, n["AS"],r.AS,tn)
+
 
             print("configuration de l'iBGP")
             for t in self.liste : 
                     if t.AS == r.AS and t.nom != r.nom :
                         loop = t.loopback[:7]
                         iBGP(r.nom,loop,r.AS,tn)
+            tn.write(bytes("end\r",encoding= 'ascii'))
+
+        for r in self.liste:
+            print("le routeur traité est:",r.nom)
+            print("configuration du routeur en BGP")
+            routeur_config = self.dico_routeurs[r.nom]
+
+            tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+            tn.write(bytes("clear bgp ipv6 unicast *\r",encoding= 'ascii'))
             tn.write(bytes("end\r",encoding= 'ascii'))
 
 def Config():
@@ -143,7 +165,7 @@ def Config():
 
 l,d = Config()
 x = GNS3_telnet(l,d)
-x.IPv6_LOOP_RIP_OSPF()
+#x.IPv6_LOOP_RIP_OSPF()
 x.BGP()                    
 
 

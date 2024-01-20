@@ -9,7 +9,7 @@ def Config_adresse(RX, adresse, int,tn) :
     tn.write(bytes("ipv6 address " + adresse + "\r",encoding= 'ascii'))
     tn.write(bytes("no shutdown\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
-
+    
 def Config_loopback(RX,loopback,tn) : 
     """
     Configuration de l'adresse loopback (str) du routeur RX (str)
@@ -27,6 +27,8 @@ def RIP(RX,tn) :
     tn.write(bytes("ipv6 router rip ripng\r",encoding= 'ascii'))
     tn.write(bytes("redistribute connected\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.5)
+
 
 def RIP_int(RX, int,tn) :
     """
@@ -35,6 +37,8 @@ def RIP_int(RX, int,tn) :
     tn.write(bytes("int "+ int +"\r",encoding= 'ascii'))
     tn.write(bytes("ipv6 rip ripng enable\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.5)
+
     
 def ID_OSPF(RX,id,tn) :
     """
@@ -43,6 +47,7 @@ def ID_OSPF(RX,id,tn) :
     tn.write(bytes("ipv6 router ospf 1\r",encoding= 'ascii'))
     tn.write(bytes("router-id "+ id +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.5)
     
 def OSPF(RX,int,tn) :
     """
@@ -51,6 +56,7 @@ def OSPF(RX,int,tn) :
     tn.write(bytes("int "+ int +"\r",encoding= 'ascii'))
     tn.write(bytes("ipv6 ospf 1 area 0\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.5)
 
 def OSPF_cost(RX,int,cost,tn) :
     """
@@ -59,6 +65,7 @@ def OSPF_cost(RX,int,cost,tn) :
     tn.write(bytes("int "+ int +"\r",encoding= 'ascii'))
     tn.write(bytes("ipv6 ospf cost "+ cost +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    
 
 def OSPF_passif(RX,int,tn) :
     """
@@ -67,6 +74,7 @@ def OSPF_passif(RX,int,tn) :
     tn.write(bytes("ipv6 router ospf 1\r",encoding= 'ascii'))
     tn.write(bytes("passive-interface "+ int +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.5)
 
 def ID_BGP(RX, id, AS,tn) :
     """
@@ -76,39 +84,40 @@ def ID_BGP(RX, id, AS,tn) :
     tn.write(bytes("no bgp default ipv4-unicast\r",encoding= 'ascii'))
     tn.write(bytes("bgp router-id "+ id +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.5)
 
 def iBGP(RX, ad_n, AS,tn) :
     """
     Configure iBGP sur l'interface loopback du routeur RX
     """
     tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
-    time.sleep(0.5)
     tn.write(bytes("neighbor "+ ad_n +" remote-as "+ AS +"\r",encoding= 'ascii'))
     tn.write(bytes("neighbor "+ ad_n +" update-source l0\r",encoding= 'ascii'))
     tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
     tn.write(bytes("neighbor "+ ad_n +" activate\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))    
+    time.sleep(0.5)
 
 def eBGP(RX, ad_n, AS_n, AS,tn) :
     """
     Configure eBGP sur l'interface loopback du routeur RX
     """
     tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
-    time.sleep(0.5)
     tn.write(bytes("neighbor "+ ad_n +" remote-as "+ AS_n +"\r",encoding= 'ascii'))
     tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
     tn.write(bytes("neighbor "+ ad_n +" activate\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii')) 
+    time.sleep(0.5)
 
 def eBGP_adv(RX, AS, prefix,tn) :
     """
     Configure advertissement pour le routeur RX en eBGP
     """ 
     tn.write(bytes("router bgp "+ AS +"\r",encoding= 'ascii'))
-    time.sleep(0.5)
     tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
     tn.write(bytes("network "+ prefix +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii')) 
+    time.sleep(0.5)
