@@ -132,7 +132,7 @@ class GNS3_telnet:
                         loop = t.loopback[:7]
                         iBGP(r.nom,loop,r.AS,tn)
             tn.write(bytes("end\r",encoding= 'ascii'))
-
+        """
         for r in self.liste:
             print("le routeur traité est:",r.nom)
             print("configuration du routeur en BGP")
@@ -141,7 +141,7 @@ class GNS3_telnet:
             tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
             tn.write(bytes("clear bgp ipv6 unicast *\r",encoding= 'ascii'))
             tn.write(bytes("end\r",encoding= 'ascii'))
-
+        """
 def Config():
         f = open("network_intent.json","r")
         content = f.read()
