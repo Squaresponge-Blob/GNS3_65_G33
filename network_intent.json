@@ -173,7 +173,7 @@
             "Voisins":[
                 {"Nom":"R11","AS":"2","Int":"GigabitEthernet4/0","Adresse":"2001:100:2:7::2/64","Metric":"1"},
                 {"Nom":"R12","AS":"2","Int":"GigabitEthernet1/0","Adresse":"2001:100:2:8::2/64","Metric":"1"},
-                {"Nom":"R14","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:2:10::1/64","Metric":"1"}
+                {"Nom":"R14","AS":"2","Int":"GigabitEthernet3/0","Adresse":"2001:100:2:10::1/64","Metric":"10"}
             ]
         },
 

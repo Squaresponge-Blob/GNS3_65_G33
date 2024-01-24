@@ -13,7 +13,7 @@ from ipaddress import IPv6Address, ip_network
 gns3_server = Gns3Connector(url ="http://localhost:3080")
 
 # Define the lab you want to load and assign the server connector
-lab = Project(name="projet", connector=gns3_server)
+lab = Project(name="Projet", connector=gns3_server)
 lab.get()
 
 print(
@@ -43,7 +43,10 @@ class GNS3_telnet:
             print("le routeur traité est:",r.nom)
             routeur_config = self.dico_routeurs[r.nom]
             tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+            tn.write(bytes("\r",encoding= 'ascii'))
+            tn.read_until(bytes("#",encoding= 'ascii'))
             tn.write(bytes("configure terminal\r",encoding= 'ascii'))
+            tn.read_until(bytes("#",encoding= 'ascii'))
             tn.write(bytes("ipv6 unicast-routing\r",encoding= 'ascii'))
             #Configurer les adresses physiques
             for v in r.voisins :
@@ -58,9 +61,7 @@ class GNS3_telnet:
                 RIP(r.nom,tn)
                 time.sleep
                 RIP_int(r.nom,"l0",tn)
-                time.sleep(1)
                 for v in r.voisins :
-                    time.sleep(0.5)
                     RIP_int(r.nom, v["Int"],tn)
 
                 #Le routeur est dans l'AS Y
@@ -69,14 +70,13 @@ class GNS3_telnet:
                 ID_OSPF(r.nom, r.id,tn)
                 OSPF(r.nom,"l0",tn)
                 for v in r.voisins :
-                    time.sleep(0.5)
                     if v["AS"] == r.AS :
                         OSPF(r.nom, v["Int"],tn)
                     else : 
                         OSPF_passif(r.nom, v["Int"],tn)   
                         OSPF(r.nom, v["Int"],tn)
-                    time.sleep(0.5)
                     if v["Metric"] != "1" :
+                        print("Change la métrique")
                         OSPF_cost(r.nom, v["Int"], v["Metric"], tn)
             tn.write(bytes("end\r",encoding= 'ascii'))  
     
@@ -89,6 +89,7 @@ class GNS3_telnet:
             routeur_config = self.dico_routeurs[r.nom]
 
             tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+            tn.write(bytes("configure terminal\r",encoding= 'ascii'))
             tn.write(bytes("configure terminal\r",encoding= 'ascii'))
             #time.sleep(0.5)
             ID_BGP(r.nom,r.id,r.AS,tn)
