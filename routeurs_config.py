@@ -30,6 +30,8 @@ for r in liste_routeurs :
         config = Int_RIP(config) # ajoute la ligne pour activer RIP
     if r.protocole =="OSPF":
         config = Int_OSPF(config)
+    if r.voisins["Metric"] != 1 :
+        config = Int_OSPF_cost(config)
 
     #OSPF interface passif
     #interface passif
