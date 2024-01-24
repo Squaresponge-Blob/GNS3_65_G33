@@ -13,7 +13,7 @@ from ipaddress import IPv6Address, ip_network
 gns3_server = Gns3Connector(url ="http://localhost:3080")
 
 # Define the lab you want to load and assign the server connector
-lab = Project(name="Projet", connector=gns3_server)
+lab = Project(name="projet", connector=gns3_server)
 lab.get()
 
 print(
@@ -75,7 +75,7 @@ class GNS3_telnet:
                     else : 
                         OSPF_passif(r.nom, v["Int"],tn)   
                         OSPF(r.nom, v["Int"],tn)
-                    if v["Metric"] != 1 :
+                    if v["Metric"] != "1" :
                         OSPF_cost(r.nom, v["Int"], v["Metric"], tn)
             tn.write(bytes("end\r",encoding= 'ascii'))  
     
