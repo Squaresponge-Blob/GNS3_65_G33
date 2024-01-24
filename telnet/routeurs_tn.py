@@ -28,7 +28,9 @@ for r in liste_routeurs :
                 OSPF(r.nom, v["Int"])
             else : 
                 OSPF_passif(r.nom, v["Int"])   
-                OSPF(r.nom, v["Int"])  
+                OSPF(r.nom, v["Int"])
+            if v["Metric"] != 1 :
+                OSPF_cost(r.nom, v["Int"], v["Metric"])
 
 
 #Routeur de bord => eBGP   
