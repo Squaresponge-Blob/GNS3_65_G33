@@ -75,6 +75,7 @@ class GNS3_telnet:
                     else : 
                         OSPF_passif(r.nom, v["Int"],tn)   
                         OSPF(r.nom, v["Int"],tn)
+                    time.sleep(0.5)
                     if v["Metric"] != "1" :
                         OSPF_cost(r.nom, v["Int"], v["Metric"], tn)
             tn.write(bytes("end\r",encoding= 'ascii'))  
