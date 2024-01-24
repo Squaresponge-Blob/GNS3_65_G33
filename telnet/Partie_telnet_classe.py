@@ -59,7 +59,6 @@ class GNS3_telnet:
             if r.AS == "1" :
                 print("configuration du routeur en RIP")
                 RIP(r.nom,tn)
-                time.sleep
                 RIP_int(r.nom,"l0",tn)
                 for v in r.voisins :
                     RIP_int(r.nom, v["Int"],tn)
