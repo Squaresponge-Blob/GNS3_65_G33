@@ -1,7 +1,7 @@
 from gns3fy import Gns3Connector, Project,Node
 import json 
 from Config_routeur_défaut import * 
-from Partie_telnet_classe import *
+from telnet.Partie_telnet_classe import *
 from routeurs_config import config_routeur
 from lecture_json import Routeur, liste_routeurs
 from fonctions_config import *
