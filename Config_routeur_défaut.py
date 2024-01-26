@@ -5,7 +5,7 @@ from tabulate import tabulate
 gns3_server = gns3fy.Gns3Connector(url ="http://localhost:3080")
 
 # Define the lab you want to load and assign the server connector
-lab = gns3fy.Project(name="projet_communities", connector=gns3_server)
+lab = gns3fy.Project(name="Projet", connector=gns3_server)
 
 print(
         tabulate(
