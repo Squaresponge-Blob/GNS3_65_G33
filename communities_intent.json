@@ -1,0 +1,66 @@
+{
+    "Routeurs":[
+        {   
+            "Nom":"R1",
+            "ID":"1.1.1.1",
+            "AS":"1",
+            "Protocole":"RIP",
+            "Loopback":"1000::1/128",
+            "Voisins":[
+                {"Nom":"R2","AS":"2","Int":"GigabitEthernet1/0","Adresse":"10:10:0:1::1/64","Adresse_v":"10:10:0:1::2/64"},
+                {"Nom":"R3","AS":"3","Int":"GigabitEthernet3/0","Adresse":"10:10:0:2::1/64","Adresse_v":"10:10:0:2::2/64"}
+            ]
+        },
+
+        {
+            "Nom":"R2",
+            "ID":"2.2.2.2",
+            "AS":"2",
+            "Protocole":"RIP",
+            "Loopback":"1000::2/128",
+            "Voisins":[
+                {"Nom":"R1","AS":"1","Int":"GigabitEthernet1/0","Adresse":"10:10:0:1::2/64","Adresse_v":"10:10:0:1::1/64"},
+                {"Nom":"R3","AS":"3","Int":"GigabitEthernet2/0","Adresse":"10:10:10:10::1/64","Adresse_v":"10:10:10:10::2/64"},
+                {"Nom":"R4","AS":"4","Int":"GigabitEthernet3/0","Adresse":"1000:10:0:1::1/64","Adresse_v":"1000:10:0:1::2/64"}
+            ]
+        },
+
+        {
+            "Nom":"R3",
+            "ID":"3.3.3.3",
+            "AS":"3",
+            "Protocole":"RIP",
+            "Loopback":"1000::3/128",
+            "Voisins":[
+                {"Nom":"R1","AS":"1","Int":"GigabitEthernet3/0","Adresse":"10:10:0:2::2/64","Adresse_v":"10:10:0:2::1/64"},
+                {"Nom":"R2","AS":"2","Int":"GigabitEthernet2/0","Adresse":"10:10:10:10::2/64","Adresse_v":"10:10:10:10::1/64"}
+
+            ]
+        },
+
+        {
+            "Nom":"R4",
+            "ID":"4.4.4.4",
+            "AS":"4",
+            "Protocole":"RIP",
+            "Loopback":"1000::4/128",
+            "Voisins":[
+                {"Nom":"R2","AS":"2","Int":"GigabitEthernet3/0","Adresse":"1000:10:0:1::2/64","Adresse_v":"1000:10:0:1::1/64"},
+                {"Nom":"R5","AS":"4","Int":"GigabitEthernet1/0","Adresse":"1000:0:0:1::1/64","Adresse_v":"1000:0:0:1::2/64"}
+        
+            ]
+        },
+
+        {
+            "Nom":"R5",
+            "ID":"5.5.5.5",
+            "AS":"4",
+            "Protocole":"RIP",
+            "Loopback":"1000::5/128",
+            "Voisins":[
+                {"Nom":"R2","AS":"1","Int":"GigabitEthernet1/0","Adresse":"1000:0:0:1::2/64","Adresse_v":"1000:0:0:1::1/64"}
+       
+            ]
+        }
+    ]
+}
