@@ -15,23 +15,7 @@ gns3_server = Gns3Connector(url ="http://localhost:3080")
 # Define the lab you want to load and assign the server connector
 lab = Project(name="Projet", connector=gns3_server)
 lab.get()
-
-print(
-        tabulate(
-            gns3_server.projects_summary(is_print=False),
-            headers=["Project Name", "Project ID", "Total Nodes", "Total Links", "Status"],
-        )
-    )
-
-# Access the project attributes
-print(f"Name: {lab.name} -- Status: {lab.status} -- Is auto_closed?: {lab.auto_close}\n")
-
-# Open the project
 lab.open()
-lab.status
-
-# Verify the stats
-lab.stats
 
 class GNS3_telnet:
     def __init__(self, liste, dico_routeurs) :
@@ -167,14 +151,14 @@ class GNS3_telnet:
         print(l_prefixes_AS_1)
         print(l_prefixes_AS_2)
         for r in self.liste :
-            print("le routeur traité est:",r.nom)
-            print("configuration du routeur en BGP")
             routeur_config = self.dico_routeurs[r.nom]
-
-            tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
-            tn.write(bytes("configure terminal\r",encoding= 'ascii'))
             for v in r.voisins: 
                 if v["AS"] != r.AS :
+                    tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+                    tn.write(bytes("configure terminal\r",encoding= 'ascii'))
+                    tn.read_until(bytes("#",encoding= 'ascii'))
+                    print("le routeur traité est:",r.nom)
+                    print("Advertisment des réseaux de l'AS")
                     if r.AS == "1": 
                         for ad in l_prefixes_AS_1:
                             eBGP_adv(r.nom, r.AS, ad,tn)
@@ -182,10 +166,11 @@ class GNS3_telnet:
                         for ad in l_prefixes_AS_2:
                             eBGP_adv(r.nom, r.AS, ad,tn)
             tn.write(bytes("end\r",encoding= 'ascii'))
+            
 
 
-def Config():
-        f = open("network_intent.json","r")
+def Config(f_json):
+        f = open(f_json,"r")
         content = f.read()
         obj=json.loads(content)
 
@@ -204,11 +189,5 @@ def Config():
                 print(f"Node: {node.name} -- Node Type: {node.node_type} -- Status: {node.status}\n")
                 dico_routeurs[node.name] = [node.console_host,str(node.console)]
         return l, dico_routeurs
-
-l,d = Config()
-x = GNS3_telnet(l,d)
-x.IPv6_LOOP_RIP_OSPF()
-x.BGP()                    
-
 
 
