@@ -1,18 +1,21 @@
 GNS3
 
 Intent files
-Deux configurations sont disponibles : la configuration à deux AS et 14 routeurs de l’énoncé (intent.json) et un configuration supplémentaire pour les communities BGP (intent_communities.json).
+
+Deux configurations sont disponiblesÂ : la configuration Ã  deux AS et 14 routeurs de lâ€™Ã©noncÃ© (intent.json) et un configuration supplÃ©mentaire pour les communities BGP (intent_communities.json).
 Pour charger le bon fichier intent, il faut modifier la ligne 15 de lecture_json.py avec le nom du fichier json voulu.
 
 
 Drag and drop bot
-Pour configurer automatiquement les fichiers startup-config du projet, il faut tout d’abord annoncer le nom du fichier GNS3 sur la ligne 12 de fonctions_config.py (ne pas oublier d’avoir chargé l’intent correspondant au projet).
-Il suffit ensuite d’exécuter soit routeurs_config.py ou routeurs_config_communities.py.
 
-Il est aussi possible de revenir au fichier startup-config par défaut en exécutant Config_routeur_défaut.py (modifier ligne 8 avec le nom du projet).
+Pour configurer automatiquement les fichiers startup-config du projet, il faut tout dâ€™abord annoncer le nom du fichier GNS3 sur la ligne 12 de fonctions_config.py (ne pas oublier dâ€™avoir chargÃ© lâ€™intent correspondant au projet).
+Il suffit ensuite dâ€™exÃ©cuter soit routeurs_config.py ou routeurs_config_communities.py.
+
+Il est aussi possible de revenir au fichier startup-config par dÃ©faut en exÃ©cutant Config_routeur_dÃ©faut.py (modifier ligne 8 avec le nom du projet).
 
 
 Telnet
-La configuration avec telnet s’effectue à l’aide d’une interface graphique. Il faut pour cela installer pillow et customtkinter : pip install pillow et pip install customtkinter dans un terminal.
-Il faut ensuite charger le projet ligne 17 de Interface_graphique.py et ligne 16 de Partie_telnet_classe.py. Vérifiez que Config_routeur_défaut.py est aussi avec le bon projet.
-Il reste à exécuter Interface_graphique.py. Il faut ajouter dans l’interface le chemin du fichier entre guillemets.
+
+La configuration avec telnet sâ€™effectue Ã  lâ€™aide dâ€™une interface graphique. Il faut pour cela installer pillow et customtkinterÂ : pip install pillow et pip install customtkinter dans un terminal.
+Il faut ensuite charger le projet ligne 17 de Interface_graphique.py et ligne 16 de Partie_telnet_classe.py. VÃ©rifiez que Config_routeur_dÃ©faut.py est aussi avec le bon projet.
+Il reste Ã  exÃ©cuter Interface_graphique.py. Il faut ajouter dans lâ€™interface le chemin du fichier entre guillemets.
