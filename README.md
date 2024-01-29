@@ -22,6 +22,6 @@ Il est aussi possible de revenir au fichier startup-config par défaut en exécu
 
 ## Telnet
 
-La configuration avec telnet s’effectue à l’aide d’une interface graphique. Il faut pour cela installer pillow et customtkinter : *pip install pillow* et *pip install customtkinter* dans un terminal.
+La configuration avec telnet s’effectue à l’aide d’une interface graphique. Il faut pour cela installer pillow et customtkinter : `pip install pillow` et `pip install customtkinter` dans un terminal.
 Il faut ensuite charger le projet ligne 17 de *Interface_graphique.py* et ligne 16 de *Partie_telnet_classe.py*. Vérifiez que *Config_routeur_défaut.py* est aussi avec le bon projet.
 Il reste à exécuter *Interface_graphique.py* et ajouter dans l’interface le chemin du fichier entre guillemets.
