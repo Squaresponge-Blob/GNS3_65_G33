@@ -142,8 +142,28 @@ def Config_BGP_activate(config, adresse):
     config += f"  neighbor {adresse} activate\n"
     return config
 
+def Neighbor_community(config,adresse,status):
+    config += f"  neighbor {adresse} send-community\n neighbor {adresse} route-map tag-{status} in\n"
+    return config
+
+def Neighbor_filter(config,adresse) :
+    config += f"  neighbor {adresse} route-map filter out\n"
+    return config
+
 def Config_BGP_exit(config):
-    config += f" exit-address-family\n!\nip forward-protocol nd\n!\n!\nno ip http server\n no ip http secure-server\n!\n"
+    config += f" exit-address-family\n!\nip forward-protocol nd\n!\n"
+    return config
+
+def Config_community_start(config) :
+    config +=f"ip bgp-community new-format\n"
+    return config
+
+def Create_community(config,status,value) :
+    config += f"ip community-list standard {status} permit {value}\n"
+    return config
+
+def Config_community_exit(config):
+    config += "!\nno ip http server\n no ip http secure-server\n!\n"
     return config
 
 def Config_RIP(config): 
@@ -152,6 +172,14 @@ def Config_RIP(config):
 
 def Config_OSPF(config,id):
     config += f"ipv6 router ospf 1\n router-id {id}\n"
+    return config
+
+def Route_map_tag(config,name,loc_pref) :
+    config +=f"route-map {name} permit 10\n set local-preference {loc_pref}\n set community 1:{loc_pref}\n!\n"
+    return config
+
+def Route_map_filter(config):
+    config +=f"route-map filter permit 10\n match community-list client\n!\n"
     return config
 
 def Config_fin(config):
@@ -168,6 +196,6 @@ def Ecrire_dans_fichier(config, nom):
     f = open(chemin,"wt")
     f.write(config)
 
-        
+
            
 

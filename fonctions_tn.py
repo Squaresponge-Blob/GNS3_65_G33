@@ -132,24 +132,24 @@ def BGP_Community_list(RX, status,tn):
     """
     Configure une community list sur le routeur RX
     """
-    if status == 'CUST':
+    if status == 'client':
         tn.write(bytes("ip community-list standard "+ status +" permit 1:200\r",encoding= 'ascii'))
-    if status == 'PEER':
+    if status == 'peer':
         tn.write(bytes("ip community-list standard "+ status +" permit 1:100\r",encoding= 'ascii'))
-    if status == 'PROV':
+    if status == 'provider':
         tn.write(bytes("ip community-list standard "+ status +" permit 1:50\r",encoding= 'ascii'))
 
 def tag_route_map(RX, status, tn):
     """
     Configure un route map sur le routeur RX
     """
-    if status == 'CUST':
+    if status == 'client':
         tn.write(bytes("route-map tag_client permit 10\r",encoding= 'ascii'))
         tn.write(bytes("set local-preference 200\r",encoding= 'ascii'))
         tn.write(bytes("set community 1:200\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
 
-    if status == 'PEER':
+    if status == 'peer':
         tn.write(bytes("route-map filter permit 10\r",encoding= 'ascii'))
         tn.write(bytes("match community-list client\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
@@ -158,7 +158,7 @@ def tag_route_map(RX, status, tn):
         tn.write(bytes("set community 1:100\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
 
-    if status == 'PROV':
+    if status == 'provider':
         tn.write(bytes("route-map filter permit 10\r",encoding= 'ascii'))
         tn.write(bytes("match community-list client\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
@@ -172,7 +172,7 @@ def neighbor_route_map(RX, AS, status, adresse,tn):
     Tag les neighbors route map sur le routeur RX
     adresses sans /64
     """
-    if status == 'CUST':
+    if status == 'client':
         tn.write(bytes(f"router bgp "+ AS +"\r" ,encoding= 'ascii'))
         tn.write(bytes("address-family ipv6 unicast\r",encoding= 'ascii'))
         tn.write(bytes("neighbor "+ adresse +" send community\r",encoding= 'ascii'))
@@ -180,14 +180,14 @@ def neighbor_route_map(RX, AS, status, adresse,tn):
         tn.write(bytes("neighbor "+ adresse +" route-map tag_client in\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
 
-    if status == 'PEER':
+    if status == 'peer':
         tn.write(bytes(f"router bgp "+ AS +"\r" ,encoding= 'ascii'))
         tn.write(bytes("neighbor "+ adresse +" send community\r",encoding= 'ascii'))
         tn.write(bytes("neighbor "+ adresse +" route-map filter out\r",encoding= 'ascii'))
         tn.write(bytes("neighbor "+ adresse +" route-map tag_peer in\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
 
-    if status == 'PROV':
+    if status == 'provider':
         tn.write(bytes(f"router bgp "+ AS +"\r" ,encoding= 'ascii'))
         tn.write(bytes("neighbor "+ adresse +" send community\r",encoding= 'ascii'))
         tn.write(bytes("neighbor "+ adresse +" route-map filter out\r",encoding= 'ascii'))

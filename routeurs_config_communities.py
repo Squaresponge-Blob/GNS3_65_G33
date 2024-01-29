@@ -71,9 +71,20 @@ for r in liste_routeurs :
         for v in r.voisins : 
             if v["AS"] != r.AS :
                 adresse_v = find_ad(r.nom, v["Nom"],liste_routeurs)
-                config = Config_BGP_activate(config,adresse_v[:15]) # ligne neighbor [adresse_v] remote-as [AS]
+                config = Config_BGP_activate(config,adresse_v[:15]) # ligne neighbor [adresse_v] activate
+                config = Neighbor_community(config,adresse_v[:15],v["Community"])
+                if v["Community"] =="peer" or v["Community"] =="provider" :
+                    config = Neighbor_filter(config,adresse_v[:15])
     
     config = Config_BGP_exit(config)
+
+    if routeurBord(r) :
+        config = Config_community_start(config)
+        config = Create_community(config,"client","1:200")
+        config = Create_community(config,"peer","1:100")
+        config = Create_community(config,"provider","1:50")
+
+    config = Config_community_exit(config)
 
     # configurer les protocoles (lignes à la fin)
     if r.protocole == "RIP" :
@@ -81,7 +92,11 @@ for r in liste_routeurs :
     if r.protocole == "OSPF" :
         config = Config_OSPF(config,r.id)
 
-
+    #Route-map
+    config = Route_map_tag(config, "tag-client","200")
+    config = Route_map_tag(config, "tag-peer","100")
+    config = Route_map_tag(config, "tag-provider","50")
+    config = Route_map_filter(config)
 
     config = Config_fin(config) #trucs à la fin
 
