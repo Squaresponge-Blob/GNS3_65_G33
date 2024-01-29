@@ -1,9 +1,13 @@
 GNS3
 
+
+
 Intent files
 
 Deux configurations sont disponibles : la configuration à deux AS et 14 routeurs de l’énoncé (intent.json) et un configuration supplémentaire pour les communities BGP (intent_communities.json).
 Pour charger le bon fichier intent, il faut modifier la ligne 15 de lecture_json.py avec le nom du fichier json voulu.
+
+
 
 
 Drag and drop bot
@@ -12,6 +16,8 @@ Pour configurer automatiquement les fichiers startup-config du projet, il faut t
 Il suffit ensuite d’exécuter soit routeurs_config.py ou routeurs_config_communities.py.
 
 Il est aussi possible de revenir au fichier startup-config par défaut en exécutant Config_routeur_défaut.py (modifier ligne 8 avec le nom du projet).
+
+
 
 
 Telnet
