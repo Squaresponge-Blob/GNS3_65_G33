@@ -8,13 +8,13 @@ from fonctions_config import *
 from customtkinter import * 
 from lecture_json import Routeur
 from PIL import Image
-#from Partie_telnet_classe import *
+from Config_routeur_défaut import nom 
 #pip install pillow et customtkinter !!!
 
 gns3_server = Gns3Connector(url ="http://localhost:3080")
 
 # Define the lab you want to load and assign the server connector
-lab = Project(name="Projet", connector=gns3_server)
+lab = Project(name=nom, connector=gns3_server)
 lab.get()
 lab.open()
 lab.status

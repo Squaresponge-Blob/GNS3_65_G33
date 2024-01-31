@@ -167,8 +167,6 @@ class GNS3_telnet:
                             eBGP_adv(r.nom, r.AS, ad,tn)
             tn.write(bytes("end\r",encoding= 'ascii'))
             
-
-
 def Config(f_json):
         f = open(f_json,"r")
         content = f.read()
@@ -189,5 +187,4 @@ def Config(f_json):
                 print(f"Node: {node.name} -- Node Type: {node.node_type} -- Status: {node.status}\n")
                 dico_routeurs[node.name] = [node.console_host,str(node.console)]
         return l, dico_routeurs
-
 

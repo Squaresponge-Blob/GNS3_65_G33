@@ -3,13 +3,14 @@ from tabulate import tabulate
 import telnetlib
 import time 
 import json
-from ipaddress import IPv6Address, ip_network
+from lecture_json import Routeur
+from Config_routeur_défaut import nom
 
 # Define the server object to establish the connection
 gns3_server = gns3fy.Gns3Connector(url ="http://localhost:3080")
 
 # Define the lab you want to load and assign the server connector
-lab = gns3fy.Project(name="Projet", connector=gns3_server)
+lab = gns3fy.Project(name=nom, connector=gns3_server)
 # Retrieve its information and display
 lab.get()
 lab.open()

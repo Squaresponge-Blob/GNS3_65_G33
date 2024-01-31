@@ -10,6 +10,7 @@ def Config_adresse(RX, adresse, int,tn) :
     tn.write(bytes("ipv6 address " + adresse + "\r",encoding= 'ascii'))
     tn.write(bytes("no shutdown\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.1)
     
 def Config_loopback(RX,loopback,tn) : 
     """
@@ -21,6 +22,7 @@ def Config_loopback(RX,loopback,tn) :
     tn.write(bytes("ipv6 address " + loopback + "\r",encoding= 'ascii'))
     tn.write(bytes("no shutdown\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.1)
 
 def RIP(RX,tn) : 
     """
@@ -60,7 +62,7 @@ def OSPF(RX,int,tn) :
     tn.read_until(bytes("#",encoding= 'ascii'))
     tn.write(bytes("ipv6 ospf 1 area 0\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
-    time.sleep(0.5)
+    time.sleep(0.1)
 
 def OSPF_cost(RX,int,cost,tn) :
     """
@@ -70,6 +72,7 @@ def OSPF_cost(RX,int,cost,tn) :
     tn.read_until(bytes("#",encoding= 'ascii'))
     tn.write(bytes("ipv6 ospf cost "+ cost +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.1)
     
 
 def OSPF_passif(RX,int,tn) :
@@ -79,6 +82,7 @@ def OSPF_passif(RX,int,tn) :
     tn.write(bytes("ipv6 router ospf 1\r",encoding= 'ascii'))
     tn.write(bytes("passive-interface "+ int +"\r",encoding= 'ascii'))
     tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.1)
     
 
 def ID_BGP(RX, id, AS,tn) :
