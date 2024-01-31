@@ -7,6 +7,7 @@
 Deux configurations sont disponibles : la configuration à deux AS et 14 routeurs de l’énoncé (*intent.json*) et un configuration supplémentaire pour les communities BGP (*intent_communities.json*).
 Pour charger le bon fichier intent, il faut modifier la ligne 15 de *lecture_json.py* avec le nom du fichier json voulu.
 
+Ex : `f = open("intent.json","r")`.
 
 
 
