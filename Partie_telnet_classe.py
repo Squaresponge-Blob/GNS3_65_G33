@@ -6,6 +6,7 @@ import telnetlib
 import time 
 import json
 from lecture_json import Routeur
+from Config_routeur_défaut import nom 
 from ipaddress import IPv6Address, ip_network
 
 
@@ -13,8 +14,7 @@ from ipaddress import IPv6Address, ip_network
 gns3_server = Gns3Connector(url ="http://localhost:3080")
 
 # Define the lab you want to load and assign the server connector
-lab = Project(name="Projet", connector=gns3_server)
-lab.get()
+lab = Project(name=nom, connector=gns3_server)
 lab.open()
 
 class GNS3_telnet:
