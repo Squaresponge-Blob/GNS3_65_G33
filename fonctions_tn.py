@@ -142,6 +142,7 @@ def BGP_Community_list(RX, status,tn):
         tn.write(bytes("ip community-list standard "+ status +" permit 1:100\r",encoding= 'ascii'))
     if status == 'provider':
         tn.write(bytes("ip community-list standard "+ status +" permit 1:50\r",encoding= 'ascii'))
+    time.sleep(0.1) 
 
 def tag_route_map(RX, status, tn):
     """
@@ -170,6 +171,7 @@ def tag_route_map(RX, status, tn):
         tn.write(bytes("set local-preference 50\r",encoding= 'ascii'))
         tn.write(bytes("set community 1:50\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.1) 
 
 def neighbor_route_map(RX, AS, status, adresse,tn):
     """
@@ -197,3 +199,4 @@ def neighbor_route_map(RX, AS, status, adresse,tn):
         tn.write(bytes("neighbor "+ adresse +" route-map filter out\r",encoding= 'ascii'))
         tn.write(bytes("neighbor "+ adresse +" route-map tag_provider in\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
+    time.sleep(0.1) 
