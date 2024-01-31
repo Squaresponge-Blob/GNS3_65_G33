@@ -15,6 +15,7 @@ gns3_server = Gns3Connector(url ="http://localhost:3080")
 
 # Define the lab you want to load and assign the server connector
 lab = Project(name=nom, connector=gns3_server)
+lab.get()
 lab.open()
 
 class GNS3_telnet:
