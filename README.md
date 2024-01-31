@@ -27,5 +27,3 @@ La configuration avec telnet s’effectue à l’aide d’une interface graphiqu
 Il suffit ensuite de lancer le fichier *Interface_graphique.py* et d'entrer dans le terminal le nom du fichier GNS3.
 
 Exemple avec un fichier GNS3 nommé *Projet* : `Nom du projet GNS3 : Projet`.
-
-**Important : Telnet fonctionnne uniquement pour la configuration à 14 routeurs (*intent.json*).**
