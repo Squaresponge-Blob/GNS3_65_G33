@@ -14,11 +14,11 @@ Exemple avec chargement de *intent.py* : `f = open("intent.json","r")`.
 ## Drag and drop bot
 
 Pour configurer automatiquement les fichiers startup-config du projet, il faut entrer dans le terminal le nom du fichier GNS3 (ne pas oublier d’avoir chargé l’intent correspondant au projet dans *lecture_json.py*).
-Il suffit ensuite décommenter soit *config_routeur()*, soit *config_routeur_communities()* dans *main.py* et d’exécuter *main.py*.
+Il suffit ensuite de décommenter soit *config_routeur()*, soit *config_routeur_communities()* dans *main.py* et d’exécuter *main.py*.
 
 Il est aussi possible de revenir au fichier startup-config par défaut en exécutant *Config_routeur_défaut.py*.
 
-Exemple avec un fichier GNS3 nommé *Projet*, pour la configuration sans communities : `config_routeur()` et `#config_routeur_communities()` dans le *main.py*, puis `Nom du projet GNS3 : Projet` dans le terminal.
+Exemple avec un fichier GNS3 nommé *Projet*, pour la configuration à 14 routeurs : `config_routeur()` et `#config_routeur_communities()` dans le *main.py*, puis `Nom du projet GNS3 : Projet` dans le terminal.
 
 ## Telnet
 
