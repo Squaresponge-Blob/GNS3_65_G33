@@ -1,6 +1,6 @@
 import gns3fy
 from tabulate import tabulate
-nom = input("nom du routeur : ")
+nom = input("Nom du projet GNS3 : ")
 
 # Define the server object to establish the connection
 gns3_server = gns3fy.Gns3Connector(url ="http://localhost:3080")
