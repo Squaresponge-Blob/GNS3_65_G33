@@ -179,7 +179,7 @@ def Route_map_tag(config,name,loc_pref) :
     return config
 
 def Route_map_filter(config):
-    config +=f"route-map filter permit 10\n match community-list client\n!\n"
+    config +=f"route-map filter permit 10\n match community client\n!\n"
     return config
 
 def Config_fin(config):

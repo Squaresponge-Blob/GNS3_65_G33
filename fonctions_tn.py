@@ -151,7 +151,7 @@ def tag_route_map(RX, status, tn):
 
     if status == 'peer':
         tn.write(bytes("route-map filter permit 10\r",encoding= 'ascii'))
-        tn.write(bytes("match community-list client\r",encoding= 'ascii'))
+        tn.write(bytes("match community client\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
         tn.write(bytes("route-map tag_peer permit 10\r",encoding= 'ascii'))
         tn.write(bytes("set local-preference 100\r",encoding= 'ascii'))
@@ -160,7 +160,7 @@ def tag_route_map(RX, status, tn):
 
     if status == 'provider':
         tn.write(bytes("route-map filter permit 10\r",encoding= 'ascii'))
-        tn.write(bytes("match community-list client\r",encoding= 'ascii'))
+        tn.write(bytes("match community client\r",encoding= 'ascii'))
         tn.write(bytes("exit\r",encoding= 'ascii'))
         tn.write(bytes("route-map tag_provider permit 10\r",encoding= 'ascii'))
         tn.write(bytes("set local-preference 50\r",encoding= 'ascii'))
