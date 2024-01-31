@@ -144,7 +144,7 @@ def Config_BGP_activate(config, adresse):
     return config
 
 def Neighbor_community(config,adresse,status):
-    config += f"  neighbor {adresse} send-community\n neighbor {adresse} route-map tag-{status} in\n"
+    config += f"  neighbor {adresse} send-community\n  neighbor {adresse} route-map tag-{status} in\n"
     return config
 
 def Neighbor_filter(config,adresse) :
@@ -168,7 +168,7 @@ def Config_community_exit(config):
     return config
 
 def Config_RIP(config): 
-    config += "ipv6 router rip ripng\n redistribute connected\n"
+    config += "ipv6 router rip ripng\n redistribute connected\n!\n"
     return config
 
 def Config_OSPF(config,id):
