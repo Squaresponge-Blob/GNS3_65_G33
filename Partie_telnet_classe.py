@@ -62,7 +62,10 @@ class GNS3_telnet:
                     if v["Metric"] != "1" :
                         print("Change la métrique")
                         OSPF_cost(r.nom, v["Int"], v["Metric"], tn)
-            tn.write(bytes("end\r",encoding= 'ascii'))  
+            tn.write(bytes("end\r",encoding= 'ascii'))
+            tn.read_until(bytes("#",encoding= 'ascii'))
+            tn.write(bytes("write\r",encoding= 'ascii'))
+            tn.write(bytes("\r",encoding= 'ascii'))  
     
     def BGP(self):
         l_prefixes_AS_1 = []
@@ -73,8 +76,9 @@ class GNS3_telnet:
             routeur_config = self.dico_routeurs[r.nom]
 
             tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+            tn.read_until(bytes("#",encoding= 'ascii'))
             tn.write(bytes("configure terminal\r",encoding= 'ascii'))
-            tn.write(bytes("configure terminal\r",encoding= 'ascii'))
+            tn.read_until(bytes("#",encoding= 'ascii'))
             #time.sleep(0.5)
             ID_BGP(r.nom,r.id,r.AS,tn)
 
@@ -156,6 +160,7 @@ class GNS3_telnet:
             for v in r.voisins: 
                 if v["AS"] != r.AS :
                     tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+                    tn.read_until(bytes("#",encoding= 'ascii'))
                     tn.write(bytes("configure terminal\r",encoding= 'ascii'))
                     tn.read_until(bytes("#",encoding= 'ascii'))
                     print("le routeur traité est:",r.nom)
@@ -167,8 +172,62 @@ class GNS3_telnet:
                         for ad in l_prefixes_AS_2:
                             eBGP_adv(r.nom, r.AS, ad,tn)
             tn.write(bytes("end\r",encoding= 'ascii'))
+            tn.read_until(bytes("#",encoding= 'ascii'))
+            tn.write(bytes("write\r",encoding= 'ascii'))
+            tn.write(bytes("\r",encoding= 'ascii'))
+
+    def BGP_Policies(self):
+        
+        gns3_server = Gns3Connector(url ="http://localhost:3080")
+        # Define the lab you want to load and assign the server connector
+        lab1 = Project(name=input("Nom de votre projet: "), connector=gns3_server)
+        lab1.get()
+        lab1.open()
+        liste, dico_routeurs = Config("intent_communities.json",lab1)
+        for r in liste:
+            print("le routeur traité est:",r.nom)
+            routeur_config = dico_routeurs[r.nom]
+            tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+            tn.write(bytes("\r",encoding= 'ascii'))
+            tn.read_until(bytes("#",encoding= 'ascii'))
+            tn.write(bytes("configure terminal\r",encoding= 'ascii'))
+            tn.read_until(bytes("#",encoding= 'ascii'))
+            tn.write(bytes("ipv6 unicast-routing\r",encoding= 'ascii'))
+            #Configurer les adresses physiques
+            for v in r.voisins :
+                Config_adresse(r.nom,v["Adresse"],v["Int"],tn)
+
+                #Configurer les interfaces loopback 
+            Config_loopback(r.nom,r.loopback,tn)
+            print("configuration du routeur en RIP")
+            RIP(r.nom,tn)
+            RIP_int(r.nom,"l0",tn)
+            for v in r.voisins :
+                RIP_int(r.nom, v["Int"],tn)
+            tn.write(bytes("end\r",encoding= 'ascii'))
+            tn.read_until(bytes("#",encoding= 'ascii'))
+            tn.write(bytes("write\r",encoding= 'ascii')) 
+            tn.write(bytes("\r",encoding= 'ascii')) 
+
+
+        for r in liste:
+            routeur_config = dico_routeurs[r.nom]
+            for v in r.voisins: 
+                if v["AS"] != r.AS :
+                    tn = telnetlib.Telnet(routeur_config[0],routeur_config[1])
+                    tn.write(bytes("configure terminal\r",encoding= 'ascii'))
+                    tn.read_until(bytes("#",encoding= 'ascii'))
+                    print("le routeur traité est:",r.nom)
+                    BGP_Community_list(r.nom, v["Community"],tn)
+                    tag_route_map(r.nom, v["Community"], tn)
+                    neighbor_route_map(r.nom, v["AS"], v["Community"],v["Adresse_v"],tn)
+            tn.write(bytes("end\r",encoding= 'ascii'))
+            tn.read_until(bytes("#",encoding= 'ascii'))
+            tn.write(bytes("write\r",encoding= 'ascii'))
+            tn.write(bytes("\r",encoding= 'ascii'))   
+
             
-def Config(f_json):
+def Config(f_json,lab):
         f = open(f_json,"r")
         content = f.read()
         obj=json.loads(content)

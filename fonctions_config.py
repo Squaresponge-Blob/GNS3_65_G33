@@ -1,8 +1,5 @@
 import gns3fy
 from tabulate import tabulate
-import telnetlib
-import time 
-import json
 from lecture_json import Routeur
 from Config_routeur_défaut import nom
 
@@ -187,7 +184,7 @@ def Config_fin(config):
     config += f"!\n!\n!\n!\ncontrol-plane\n!\n!\nline con 0\n exec-timeout 0 0\n privilege level 15\n logging synchronous\n stopbits 1\nline aux 0\n exec-timeout 0 0\n privilege level 15\n logging synchronous\n stopbits 1\nline vty 0 4\n login\n!\n!\nend"
     return config
 
-def Ecrire_dans_fichier(config, nom):
+def Ecrire_dans_fichier(config, nom,lab):
     routeur = 1
     for node in lab.nodes: 
         node.get()

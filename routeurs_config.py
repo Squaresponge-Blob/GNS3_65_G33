@@ -7,7 +7,7 @@ from fonctions_config import *
 
 
 
-def config_routeur():
+def config_routeur(lab):
     liste_AS ={}
     liste_AS["1"] = []
     liste_AS["2"] = []
@@ -97,7 +97,8 @@ def config_routeur():
 
 
 
-def config_routeur_communities():
+def config_routeur_communities(lab):
+
 
     liste_AS ={}
     liste_AS["1"] = []
@@ -196,7 +197,7 @@ def config_routeur_communities():
 
         print(f"***Config de {r.nom} en cours d'écriture***")
 
-        Ecrire_dans_fichier(config,r.nom) 
+        Ecrire_dans_fichier(config,r.nom,lab) 
         print(f"***Config de {r.nom} faite***")
 
 
