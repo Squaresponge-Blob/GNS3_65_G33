@@ -44,13 +44,13 @@ for r in liste_routeurs :
     
     for r2 in liste_AS[r.AS] :
         if r2.nom != r.nom :
-            config = Config_BGP_neighbor(config,r2.loopback[:7],r2.AS)
-            config = Config_iBGP(config, r2.loopback[:7])
+            config = Config_BGP_neighbor(config,r2.loopback[:len(r2.loopback)-3],r2.AS)
+            config = Config_iBGP(config, r2.loopback[:len(r2.loopback)-3])
     if routeurBord(r) :
         for v in r.voisins : 
             if v["AS"] != r.AS :
                 adresse_v = find_ad(r.nom, v["Nom"],liste_routeurs)
-                config = Config_BGP_neighbor(config,adresse_v[:15],v["AS"]) # ligne neighbor [adresse_v] remote-as [AS]
+                config = Config_BGP_neighbor(config,adresse_v[:len(adresse_v)-3],v["AS"]) # ligne neighbor [adresse_v] remote-as [AS]
     
 
     config = Config_BGP2(config) #address-family ipv6
@@ -61,20 +61,20 @@ for r in liste_routeurs :
         config = Config_BGP_adv(config,network)
         for v in r.voisins :
             if v["AS"]!=r.AS :
-                network = v["Adresse"][:14]+"/64"
+                network = v["Adresse"][:len(v["Adresse"])-4]+"/64"
                 config = Config_BGP_adv(config,network)
 
     for r2 in liste_AS[r.AS] :
         if r2.nom != r.nom :
-            config = Config_BGP_activate(config, r2.loopback[:7])
+            config = Config_BGP_activate(config, r2.loopback[:len(r2.loopback)-3])
     if routeurBord(r) :
         for v in r.voisins : 
             if v["AS"] != r.AS :
                 adresse_v = find_ad(r.nom, v["Nom"],liste_routeurs)
-                config = Config_BGP_activate(config,adresse_v[:15]) # ligne neighbor [adresse_v] activate
-                config = Neighbor_community(config,adresse_v[:15],v["Community"])
+                config = Config_BGP_activate(config,adresse_v[:len(adresse_v)-3]) # ligne neighbor [adresse_v] activate
+                config = Neighbor_community(config,adresse_v[:len(adresse_v)-3],v["Community"])
                 if v["Community"] =="peer" or v["Community"] =="provider" :
-                    config = Neighbor_filter(config,adresse_v[:15])
+                    config = Neighbor_filter(config,adresse_v[:len(adresse_v)-3])
     
     config = Config_BGP_exit(config)
 
