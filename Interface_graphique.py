@@ -23,18 +23,18 @@ class gui():
     def __init__(self):
         self.app = CTk()
         self.app.geometry ("1700x500")
-        self.app.iconbitmap("gns3.ico")
+        self.app.iconbitmap("./interface/gns3.ico")
         self.app.title("Configuration réseau")
         set_appearance_mode("dark")
-        set_default_color_theme("Hades.json") 
+        set_default_color_theme("./interface/Hades.json") 
 
         self.widgets(self.app)
 
     def widgets(self,app):
         #Images des boutons
-        self.img = Image.open("router.png")
-        self.img_tel = Image.open("Putty.png")
-        self.img_defaut= Image.open("defaut.png")
+        self.img = Image.open("./interface/router.png")
+        self.img_tel = Image.open("./interface/Putty.png")
+        self.img_defaut= Image.open("./interface/defaut.png")
 
         #Configuration des différents widgets
         self.intro = CTkLabel(master=app, text="Configurer votre réseau avec votre fichier JSON!",font=("Arial",25))
