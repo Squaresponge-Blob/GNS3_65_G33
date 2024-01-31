@@ -58,7 +58,7 @@
             "Protocole":"RIP",
             "Loopback":"1000::5/128",
             "Voisins":[
-                {"Nom":"R2","AS":"1","Int":"GigabitEthernet1/0","Adresse":"1000:0:0:1::2/64"}
+                {"Nom":"R4","AS":"4","Int":"GigabitEthernet1/0","Adresse":"1000:0:0:1::2/64"}
             ]
         }
     ]
