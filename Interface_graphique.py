@@ -124,7 +124,7 @@ class gui():
             res = tn.read_very_eager().decode('utf-8')
     
             self.textbox1[nodes.name].insert("0.0", res)
-        lab1.close()
+        
 
     def Config_JSON_start(self):
         config_routeur(lab)

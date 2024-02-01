@@ -64,6 +64,7 @@ class GNS3_telnet:
                         OSPF_cost(r.nom, v["Int"], v["Metric"], tn)
             tn.write(bytes("end\r",encoding= 'ascii'))
             tn.read_until(bytes("#",encoding= 'ascii'))
+            time.sleep(0.1)
             tn.write(bytes("write\r",encoding= 'ascii'))
             tn.write(bytes("\r",encoding= 'ascii'))  
     
@@ -172,6 +173,7 @@ class GNS3_telnet:
                         for ad in l_prefixes_AS_2:
                             eBGP_adv(r.nom, r.AS, ad,tn)
             tn.write(bytes("end\r",encoding= 'ascii'))
+            time.sleep(0.1)
             tn.read_until(bytes("#",encoding= 'ascii'))
             tn.write(bytes("write\r",encoding= 'ascii'))
             tn.write(bytes("\r",encoding= 'ascii'))
@@ -180,7 +182,7 @@ class GNS3_telnet:
         
         gns3_server = Gns3Connector(url ="http://localhost:3080")
         # Define the lab you want to load and assign the server connector
-        lab1 = Project(name=input("Nom de votre projet: "), connector=gns3_server)
+        lab1 = Project(name="communities", connector=gns3_server)
         lab1.get()
         lab1.open()
         liste, dico_routeurs = Config("intent_communities.json",lab1)
@@ -206,6 +208,7 @@ class GNS3_telnet:
                 RIP_int(r.nom, v["Int"],tn)
             tn.write(bytes("end\r",encoding= 'ascii'))
             tn.read_until(bytes("#",encoding= 'ascii'))
+            time.sleep(0.1)
             tn.write(bytes("write\r",encoding= 'ascii')) 
             tn.write(bytes("\r",encoding= 'ascii')) 
 
@@ -220,9 +223,10 @@ class GNS3_telnet:
                     print("le routeur traité est:",r.nom)
                     BGP_Community_list(r.nom, v["Community"],tn)
                     tag_route_map(r.nom, v["Community"], tn)
-                    neighbor_route_map(r.nom, v["AS"], v["Community"],v["Adresse_v"],tn)
+                    neighbor_route_map(r.nom, r.AS, v["Community"],v["Adresse_v"][:len(v["Adresse_v"])-3],tn)
             tn.write(bytes("end\r",encoding= 'ascii'))
             tn.read_until(bytes("#",encoding= 'ascii'))
+            time.sleep(0.1)
             tn.write(bytes("write\r",encoding= 'ascii'))
             tn.write(bytes("\r",encoding= 'ascii'))   
 

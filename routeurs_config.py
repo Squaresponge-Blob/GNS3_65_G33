@@ -46,8 +46,8 @@ def config_routeur(lab):
         
         for r2 in liste_AS[r.AS] :
             if r2.nom != r.nom :
-                config = Config_BGP_neighbor(config,r2.loopback[:len(r2.loopback)-3],r2.AS)
-                config = Config_iBGP(config, r2.loopback[:len(r2.loopback)-3])
+                config = Config_BGP_neighbor(config,r2.loopback[:len(r2.loopback)-4],r2.AS)
+                config = Config_iBGP(config, r2.loopback[:len(r2.loopback)-4])
         if routeurBord(r) :
             for v in r.voisins : 
                 if v["AS"] != r.AS :
@@ -69,7 +69,7 @@ def config_routeur(lab):
 
         for r2 in liste_AS[r.AS] :
             if r2.nom != r.nom :
-                config = Config_BGP_activate(config, r2.loopback[:len(r2.loopback)-3])
+                config = Config_BGP_activate(config, r2.loopback[:len(r2.loopback)-4])
         if routeurBord(r) :
             for v in r.voisins : 
                 if v["AS"] != r.AS :
@@ -139,8 +139,8 @@ def config_routeur_communities(lab):
         
         for r2 in liste_AS[r.AS] :
             if r2.nom != r.nom :
-                config = Config_BGP_neighbor(config,r2.loopback[:len(r2.loopback)-3],r2.AS)
-                config = Config_iBGP(config, r2.loopback[:len(r2.loopback)-3])
+                config = Config_BGP_neighbor(config,r2.loopback[:len(r2.loopback)-4],r2.AS)
+                config = Config_iBGP(config, r2.loopback[:len(r2.loopback)-4])
         if routeurBord(r) :
             for v in r.voisins : 
                 if v["AS"] != r.AS :
@@ -161,7 +161,7 @@ def config_routeur_communities(lab):
 
         for r2 in liste_AS[r.AS] :
             if r2.nom != r.nom :
-                config = Config_BGP_activate(config, r2.loopback[:len(r2.loopback)-3])
+                config = Config_BGP_activate(config, r2.loopback[:len(r2.loopback)-4])
         if routeurBord(r) :
             for v in r.voisins : 
                 if v["AS"] != r.AS :
