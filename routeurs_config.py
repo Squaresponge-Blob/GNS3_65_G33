@@ -90,7 +90,7 @@ def config_routeur(lab):
 
         print(f"***Config de {r.nom} en cours d'écriture***")
 
-        Ecrire_dans_fichier(config,r.nom) 
+        Ecrire_dans_fichier(config,r.nom,lab) 
         print(f"***Config de {r.nom} faite***")
 
 

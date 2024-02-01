@@ -12,7 +12,7 @@ class Routeur :
         return f"{self.nom} d'ID : {self.id} appartient à l'AS {self.AS}"
 
 
-f = open("intent_communities.json","r")
+f = open("intent.json","r")
 content = f.read()
 obj=json.loads(content)
 
