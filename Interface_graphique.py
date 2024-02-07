@@ -108,7 +108,7 @@ class gui():
             content = f.read()
             self.textbox1[nodes.name].insert("0.0", content)
             routeur += 1
-        lab1.close()
+        
 
     def BGP_Tel_Policies(self):
         lab1 = Project(name="communities", connector=gns3_server)
